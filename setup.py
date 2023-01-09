@@ -36,6 +36,8 @@ setup(
         "Topic :: Communications",
         "Topic :: Communications :: Chat",
     ],
-    install_requires=[],
+    install_requires=[
+        "py-cord[speed]>=2.3.2,<3.0.0",
+    ],
     python_requires=">=3.7"
 )

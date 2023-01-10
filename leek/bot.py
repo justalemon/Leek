@@ -30,6 +30,15 @@ class LeekBot(AutoShardedBot):
         """
         return self.__pool is not None
 
+    @property
+    def connection(self):
+        """
+        Gathers a database connection from the pool, if available.
+        """
+        if not self.is_pool_available:
+            return None
+        return self.__pool.acquire()
+
     async def on_connect(self):
         await super().on_connect()
         self.__pool = await aiomysql.create_pool(**self.__pool_info)

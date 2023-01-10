@@ -13,7 +13,7 @@ class LeekBot(AutoShardedBot):
             pool_info = {}
 
         pool_info["minsize"] = 0
-        pool_info["maxsize"] = -1
+        pool_info["maxsize"] = 0
         pool_info["pool_recycle"] = 60.0
 
         self.__pool_info: dict = pool_info

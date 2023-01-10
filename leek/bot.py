@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import logging
 from typing import Optional
 
 import aiomysql
 from aiomysql import Pool
 from discord import AutoShardedBot
+
+LOGGER = logging.getLogger("leek")
 
 
 class LeekBot(AutoShardedBot):
@@ -23,3 +26,6 @@ class LeekBot(AutoShardedBot):
     async def on_connect(self):
         await super().on_connect()
         self.__pool = await aiomysql.create_pool(**self.__pool_info)
+
+    async def on_ready(self):
+        LOGGER.info("Bot is Ready to start working!")

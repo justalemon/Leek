@@ -23,6 +23,13 @@ class LeekBot(AutoShardedBot):
         self.__pool: Optional[Pool] = None
         super().__init__(*args, **kwargs)
 
+    @property
+    def is_pool_available(self):
+        """
+        If the database pool is available.
+        """
+        return self.__pool is not None
+
     async def on_connect(self):
         await super().on_connect()
         self.__pool = await aiomysql.create_pool(**self.__pool_info)

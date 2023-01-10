@@ -6,12 +6,13 @@ from typing import Optional
 import aiomysql
 from aiomysql import Pool
 from discord import AutoShardedBot
+from discord.ext.commands import Context
 
 LOGGER = logging.getLogger("leek")
 
 
 class LeekBot(AutoShardedBot):
-    def __init__(self, *args, pool_info: Optional[dict] = None, **kwargs):
+    def __init__(self, *args, debug: bool = False, pool_info: Optional[dict] = None, **kwargs):
         if pool_info is None:
             pool_info = {}
 
@@ -19,9 +20,17 @@ class LeekBot(AutoShardedBot):
         pool_info["maxsize"] = 0
         pool_info["pool_recycle"] = 60.0
 
+        self.__debug: bool = debug
         self.__pool_info: dict = pool_info
         self.__pool: Optional[Pool] = None
         super().__init__(*args, **kwargs)
+
+    @property
+    def debug(self):
+        """
+        If debug mode is enabled. Debug mode writes the raw exceptions to Discord instead of showing an error message.
+        """
+        return self.__debug
 
     @property
     def is_pool_available(self):

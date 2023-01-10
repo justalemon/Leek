@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 
+from discord import Intents
 from dotenv import load_dotenv
 
 from .bot import LeekBot
@@ -18,7 +19,7 @@ def main():
         LOGGER.error("Discord Token is not set")
         sys.exit(2)
 
-    bot = LeekBot()
+    bot = LeekBot(intents=Intents.all())
     bot.run(os.environ["DISCORD_TOKEN"])
 
 

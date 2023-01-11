@@ -15,6 +15,9 @@ LOGGER = logging.getLogger("leek")
 
 class LeekBot(AutoShardedBot):
     def __init__(self, *args, debug: bool = False, pool_info: Optional[dict] = None, **kwargs):
+        if debug:
+            LOGGER.warning("Debug mode is enabled, exceptions will be returned to the user")
+
         if pool_info is None:
             pool_info = {}
 

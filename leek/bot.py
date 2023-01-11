@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import logging
+import traceback
 from typing import Optional
 
 import aiomysql
 from aiomysql import Pool
-from discord import AutoShardedBot
-from discord.ext.commands import Context
+from discord import AutoShardedBot, ApplicationContext, DiscordException
+
+from .localization import localize
 
 LOGGER = logging.getLogger("leek")
 
@@ -54,3 +56,13 @@ class LeekBot(AutoShardedBot):
 
     async def on_ready(self):
         LOGGER.info("Bot is Ready to start working!")
+
+    async def on_application_command_error(self, ctx: ApplicationContext, exception: DiscordException):
+        if self.debug:
+            info = traceback.format_exception(type(exception), exception, exception.__traceback__)
+            text = "\n".join(info)
+            await ctx.respond(f"```\n{text}\n```", ephemeral=True)
+        else:
+            await ctx.respond(localize("BOT_EXCEPTION_OCURRED", ctx.locale), ephemeral=True)
+
+        await super().on_application_command_error(ctx, exception)

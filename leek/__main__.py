@@ -20,7 +20,7 @@ def main():
         LOGGER.error("Discord Token is not set")
         sys.exit(2)
 
-    bot = LeekBot(intents=Intents.all())
+    bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0", intents=Intents.all())
 
     cogs_to_load = os.environ.get("LEEK_COGS", "").split(",")
 

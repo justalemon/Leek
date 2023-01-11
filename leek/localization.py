@@ -31,6 +31,7 @@ def localize(key: str, lang: str):
     path = Path(frame.filename)
 
     __ensure_lang_file(path, lang)
+    __ensure_lang_file(path, "en-US")
 
     langs = PATHS[path]
     return langs.get(lang, {}).get(key, None) or langs.get("en-US", {}).get(key, key)

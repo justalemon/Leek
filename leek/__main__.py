@@ -54,8 +54,8 @@ def main():
 
         try:
             bot.add_cog(cog(bot))
-        except BaseException as e:
-            LOGGER.error(f"Unable to start '{name}': {e}")
+        except Exception:
+            LOGGER.exception(f"Unable to start '{name}'")
         finally:
             LOGGER.info(f"Added cog {name}")
 

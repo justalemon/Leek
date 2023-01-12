@@ -19,16 +19,14 @@ class LeekBot(AutoShardedBot):
         if debug:
             LOGGER.warning("Debug mode is enabled, exceptions will be returned to the user")
 
-        if pool_info is None:
-            pool_info = {}
-
-        pool_info["minsize"] = 0
-        pool_info["maxsize"] = 0
-        pool_info["pool_recycle"] = 60.0
+        if pool_info is not None:
+            pool_info["minsize"] = 0
+            pool_info["maxsize"] = 0
+            pool_info["pool_recycle"] = 60.0
 
         self.__session: Optional[aiohttp.ClientSession] = None
         self.__debug: bool = debug
-        self.__pool_info: dict = pool_info
+        self.__pool_info: Optional[dict] = pool_info
         self.__pool: Optional[Pool] = None
         super().__init__(*args, **kwargs)
 
@@ -112,7 +110,9 @@ class LeekBot(AutoShardedBot):
 
     async def on_connect(self):
         await super().on_connect()
-        self.__pool = await aiomysql.create_pool(**self.__pool_info)
+
+        if self.__pool_info is not None:
+            self.__pool = await aiomysql.create_pool(**self.__pool_info)
 
     async def on_ready(self):
         LOGGER.info("Bot is Ready to start working!")

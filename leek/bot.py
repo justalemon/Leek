@@ -19,6 +19,9 @@ class LeekBot(AutoShardedBot):
         if debug:
             LOGGER.warning("Debug mode is enabled, exceptions will be returned to the user")
 
+        if pool_info is None:
+            LOGGER.warning("DB Connection not present, some Cogs might not work")
+
         if pool_info is not None:
             pool_info["minsize"] = 0
             pool_info["maxsize"] = 0

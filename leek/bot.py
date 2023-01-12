@@ -4,6 +4,7 @@ import logging
 import traceback
 from typing import Optional
 
+import aiohttp
 import aiomysql
 from aiomysql import Pool
 from discord import AutoShardedBot, ApplicationContext, DiscordException
@@ -25,10 +26,17 @@ class LeekBot(AutoShardedBot):
         pool_info["maxsize"] = 0
         pool_info["pool_recycle"] = 60.0
 
+        self.__session: Optional[aiohttp.ClientSession] = None
         self.__debug: bool = debug
         self.__pool_info: dict = pool_info
         self.__pool: Optional[Pool] = None
         super().__init__(*args, **kwargs)
+
+    async def __ensure_sesion(self):
+        if self.__session is None:
+            self.__session = aiohttp.ClientSession(headers={
+                "User-Agent": "Leek/0.0.1"
+            })
 
     @property
     def debug(self):
@@ -52,6 +60,55 @@ class LeekBot(AutoShardedBot):
         if not self.is_pool_available:
             return None
         return self.__pool.acquire()
+
+    async def get(self, *args, **kwargs):
+        """
+        Makes a GET request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.get(*args, **kwargs)
+
+    async def post(self, *args, **kwargs):
+        """
+        Makes a POST request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.post(*args, **kwargs)
+
+    async def put(self, *args, **kwargs):
+        """
+        Makes a PUT request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.put(*args, **kwargs)
+
+    async def delete(self, *args, **kwargs):
+        """
+        Makes a DELETE request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.delete(*args, **kwargs)
+
+    async def head(self, *args, **kwargs):
+        """
+        Makes a HEAD request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.head(*args, **kwargs)
+
+    async def options(self, *args, **kwargs):
+        """
+        Makes a OPTIONS request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.options(*args, **kwargs)
+
+    async def patch(self, *args, **kwargs):
+        """
+        Makes a PATCH request.
+        """
+        await self.__ensure_sesion()
+        return await self.__session.patch(*args, **kwargs)
 
     async def on_connect(self):
         await super().on_connect()

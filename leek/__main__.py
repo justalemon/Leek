@@ -22,7 +22,7 @@ def main():
 
     bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0", intents=Intents.all())
 
-    cogs_to_load = os.environ.get("LEEK_COGS", "").split(",")
+    cogs_to_load = os.environ.get("DISCORD_COGS", "").split(",")
 
     for name in cogs_to_load:
         name = name.strip()

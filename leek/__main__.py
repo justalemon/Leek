@@ -2,6 +2,7 @@ import importlib
 import logging
 import os
 import sys
+from typing import Optional
 
 from discord import Intents, Cog
 from dotenv import load_dotenv
@@ -9,6 +10,29 @@ from dotenv import load_dotenv
 from .bot import LeekBot
 
 LOGGER = logging.getLogger("leek")
+
+
+def get_int_safe(key: str, default: Optional[int] = None):
+    try:
+        return int(os.environ.get(key, default))
+    except TypeError:
+        return None
+    except KeyError:
+        return None
+    except ValueError:
+        LOGGER.error(f"Environment variable {key} is not a valid number!")
+        return None
+
+
+def get_sql_connection():
+    config = {
+        "host": os.environ.get("SQL_HOST", "127.0.0.1"),
+        "port": get_int_safe("SQL_PORT", 3306),
+        "user": os.environ.get("SQL_USER", None),
+        "password": os.environ.get("SQL_PASSWORD", None),
+        "db": os.environ.get("SQL_DB", "mysql")
+    }
+    return None if any(x is None for x in config.values()) else config
 
 
 def main():
@@ -20,7 +44,9 @@ def main():
         LOGGER.error("Discord Token is not set")
         sys.exit(2)
 
-    bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0", intents=Intents.all())
+    bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0",
+                  pool_info=get_sql_connection(),
+                  intents=Intents.all())
 
     cogs_to_load = os.environ.get("DISCORD_COGS", "").split(",")
 

@@ -41,5 +41,11 @@ setup(
         "python-dotenv>=0.21.0,<1.0.0",
         "aiohttp>=3.6.0,<4.0.0"
     ],
-    python_requires=">=3.8"
+    python_requires=">=3.8",
+    package_data={
+        "": [
+            "*.json"
+        ]
+    },
+    include_package_data=True
 )

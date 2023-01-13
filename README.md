@@ -27,7 +27,18 @@ pip install -e .
 
 ## Usage
 
-TODO
+Leek allows you to configure your bot just by using a `.env` file. On this `.env` file, you can configure the following options:
+
+* DISCORD_TOKEN: The Discord Bot Token (required)
+* DISCORD_DEBUG: Whether Debug features are enabled or not (optional, set it to anything other than zero to enable)
+* DISCORD_COGS: The Cogs to load by default (optional, separated by comas in the format `library.path:Class`)
+* SQL_HOST: The host for the SQL connection (optional, defaults to `127.0.0.1`)
+* SQL_PORT: The port for the SQL connection (optional, defaults to `3306`)
+* SQL_USER: The user for the SQL connection (optional, but required if you want to use SQL support)
+* SQL_PASSWORD: The password for the SQL connection (optional, but required if you want to use SQL support)
+* SQL_DB: The name of the SQL database (optional, defaults to `discord`)
+
+After setting the required configuration options, you can start the bot by using `python -m leek`.
 
 [actions-img]: https://img.shields.io/github/actions/workflow/status/LeekByLemon/Leek/main.yml?branch=master&label=actions
 [actions-url]: https://github.com/LeekByLemon/Leek/actions

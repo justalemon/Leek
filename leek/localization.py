@@ -2,6 +2,7 @@ import inspect
 import json
 import logging
 from pathlib import Path
+from typing import Any
 
 LOGGER = logging.getLogger("leek")
 PATHS: dict[Path, dict[str, dict[str, str]]] = {}
@@ -25,7 +26,7 @@ def __ensure_lang_file(path: Path, lang: str):
     PATHS[path] = langs
 
 
-def localize(key: str, lang: str):
+def localize(key: str, lang: str, *formatting_params: Any):
     stack = inspect.stack()
     frame = stack[1]
     path = Path(frame.filename)
@@ -34,4 +35,6 @@ def localize(key: str, lang: str):
     __ensure_lang_file(path, "en-US")
 
     langs = PATHS[path]
-    return langs.get(lang, {}).get(key, None) or langs.get("en-US", {}).get(key, key)
+    localized = langs.get(lang, {}).get(key, None) or langs.get("en-US", {}).get(key, key)
+
+    return localized if key == localized else localized.format(*formatting_params)

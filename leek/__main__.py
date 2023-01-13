@@ -30,7 +30,7 @@ def get_sql_connection():
         "port": get_int_safe("SQL_PORT", 3306),
         "user": os.environ.get("SQL_USER", None),
         "password": os.environ.get("SQL_PASSWORD", None),
-        "db": os.environ.get("SQL_DB", "mysql")
+        "db": os.environ.get("SQL_DB", "discord")
     }
     return None if any(x is None for x in config.values()) else config
 

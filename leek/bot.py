@@ -6,7 +6,7 @@ from typing import Optional
 
 import aiohttp
 import aiomysql
-from aiomysql import Pool
+from aiomysql import Pool, Connection
 from discord import AutoShardedBot, ApplicationContext, DiscordException
 
 from .localization import localize
@@ -54,7 +54,7 @@ class LeekBot(AutoShardedBot):
         return self.__pool is not None
 
     @property
-    def connection(self):
+    def connection(self) -> Optional[Connection]:
         """
         Gathers a database connection from the pool, if available.
         """

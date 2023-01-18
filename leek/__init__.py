@@ -1,3 +1,3 @@
 from .bot import LeekBot
 from .exception import *
-from .localization import localize
+from .localization import localize, get_localizations

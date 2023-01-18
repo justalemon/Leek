@@ -61,6 +61,22 @@ def __ensure_lang_file(path: Path, lang: str):
     PATHS[path] = langs
 
 
+def get_localizations(key: str):
+    stack = inspect.stack()
+    frame = stack[1]
+    path = Path(frame.filename)
+
+    localized = {}
+
+    for locale in LOCALES:
+        __ensure_lang_file(path, locale)
+
+        if key in PATHS[path][locale]:
+            localized[locale] = PATHS[path][locale][key]
+
+    return localized
+
+
 def localize(key: str, lang: str, *formatting_params: Any):
     stack = inspect.stack()
     frame = stack[1]

@@ -40,7 +40,7 @@ LOCALES = [
 PATHS: dict[Path, dict[str, dict[str, str]]] = {}
 
 
-def __ensure_lang_file(path: Path, lang: str):
+def __ensure_lang_file(path: Path, lang: str, log: bool):
     if path in PATHS and lang in PATHS[path]:
         return
 
@@ -50,7 +50,8 @@ def __ensure_lang_file(path: Path, lang: str):
         with open(lang_path, encoding="utf-8") as file:
             lines: dict[str, str] = json.load(file)
     except FileNotFoundError:
-        LOGGER.warning(f"Couldn't find {lang_path} for lang {lang}")
+        if log:
+            LOGGER.warning(f"Couldn't find {lang_path} for lang {lang}")
         lines = {}
     except json.JSONDecodeError:
         LOGGER.exception(f"Unable to load {lang_path}")
@@ -69,7 +70,7 @@ def get_localizations(key: str):
     localized = {}
 
     for locale in LOCALES:
-        __ensure_lang_file(path, locale)
+        __ensure_lang_file(path, locale, False)
 
         if key in PATHS[path][locale]:
             localized[locale] = PATHS[path][locale][key]
@@ -82,8 +83,8 @@ def localize(key: str, lang: str, *formatting_params: Any):
     frame = stack[1]
     path = Path(frame.filename)
 
-    __ensure_lang_file(path, lang)
-    __ensure_lang_file(path, "en-US")
+    __ensure_lang_file(path, lang, True)
+    __ensure_lang_file(path, "en-US", True)
 
     langs = PATHS[path]
     localized = langs.get(lang, {}).get(key, None) or langs.get("en-US", {}).get(key, key)

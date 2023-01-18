@@ -46,11 +46,14 @@ def __ensure_lang_file(path: Path, lang: str):
 
     lang_path = path.with_suffix(f".{lang}.json")
 
-    if lang_path.is_file():
+    try:
         with open(lang_path, encoding="utf-8") as file:
             lines: dict[str, str] = json.load(file)
-    else:
+    except FileNotFoundError:
         LOGGER.warning(f"Couldn't find {lang_path} for lang {lang}")
+        lines = {}
+    except json.JSONDecodeError:
+        LOGGER.exception(f"Unable to load {lang_path}")
         lines = {}
 
     langs = PATHS.get(path, {})

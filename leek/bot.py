@@ -6,6 +6,7 @@ from typing import Optional
 
 import aiohttp
 import aiomysql
+from aiohttp.client import _RequestContextManager
 from aiomysql import Pool, Connection
 from discord import AutoShardedBot, ApplicationContext, DiscordException
 
@@ -62,54 +63,54 @@ class LeekBot(AutoShardedBot):
             return None
         return self.__pool.acquire()
 
-    async def get(self, *args, **kwargs):
+    async def get(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a GET request.
         """
         await self.__ensure_sesion()
-        return await self.__session.get(*args, **kwargs)
+        return self.__session.get(*args, **kwargs)
 
-    async def post(self, *args, **kwargs):
+    async def post(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a POST request.
         """
         await self.__ensure_sesion()
-        return await self.__session.post(*args, **kwargs)
+        return self.__session.post(*args, **kwargs)
 
-    async def put(self, *args, **kwargs):
+    async def put(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a PUT request.
         """
         await self.__ensure_sesion()
-        return await self.__session.put(*args, **kwargs)
+        return self.__session.put(*args, **kwargs)
 
-    async def delete(self, *args, **kwargs):
+    async def delete(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a DELETE request.
         """
         await self.__ensure_sesion()
-        return await self.__session.delete(*args, **kwargs)
+        return self.__session.delete(*args, **kwargs)
 
-    async def head(self, *args, **kwargs):
+    async def head(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a HEAD request.
         """
         await self.__ensure_sesion()
-        return await self.__session.head(*args, **kwargs)
+        return self.__session.head(*args, **kwargs)
 
-    async def options(self, *args, **kwargs):
+    async def options(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a OPTIONS request.
         """
         await self.__ensure_sesion()
-        return await self.__session.options(*args, **kwargs)
+        return self.__session.options(*args, **kwargs)
 
-    async def patch(self, *args, **kwargs):
+    async def patch(self, *args, **kwargs) -> _RequestContextManager:
         """
         Makes a PATCH request.
         """
         await self.__ensure_sesion()
-        return await self.__session.patch(*args, **kwargs)
+        return self.__session.patch(*args, **kwargs)
 
     async def on_connect(self):
         await super().on_connect()

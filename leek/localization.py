@@ -5,6 +5,38 @@ from pathlib import Path
 from typing import Any
 
 LOGGER = logging.getLogger("leek")
+LOCALES = [
+    "id",
+    "da",
+    "de",
+    "en-GB",
+    "en-US",
+    "es-ES",
+    "fr",
+    "hr",
+    "it",
+    "hu",
+    "nl",
+    "no",
+    "pl",
+    "pt-BR",
+    "ro",
+    "fi",
+    "sv-SE",
+    "vi",
+    "tr",
+    "cs",
+    "el",
+    "bg",
+    "ru",
+    "ul",
+    "hi",
+    "th",
+    "zh-CN",
+    "ja",
+    "zh-TW",
+    "ko"
+]
 PATHS: dict[Path, dict[str, dict[str, str]]] = {}
 
 

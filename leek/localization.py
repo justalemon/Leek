@@ -94,3 +94,7 @@ def get_localizations(key: str):
 
 def localize(key: str, lang: str, *formatting_params: Any):
     return __localize(key, lang, *formatting_params)
+
+
+def get_default(key: str, *formatting_params: Any):
+    return __localize(key, "en-US", *formatting_params)

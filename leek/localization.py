@@ -40,6 +40,20 @@ LOCALES = [
 PATHS: dict[Path, dict[str, dict[str, str]]] = {}
 
 
+def __localize(key: str, locale: str, *formatting_params: Any):
+    stack = inspect.stack()
+    frame = stack[2]
+    path = Path(frame.filename)
+
+    __ensure_lang_file(path, locale, True)
+    __ensure_lang_file(path, "en-US", True)
+
+    langs = PATHS[path]
+    localized = langs.get(locale, {}).get(key, None) or langs.get("en-US", {}).get(key, key)
+
+    return localized if key == localized else localized.format(*formatting_params)
+
+
 def __ensure_lang_file(path: Path, lang: str, log: bool):
     if path in PATHS and lang in PATHS[path]:
         return
@@ -79,14 +93,4 @@ def get_localizations(key: str):
 
 
 def localize(key: str, lang: str, *formatting_params: Any):
-    stack = inspect.stack()
-    frame = stack[1]
-    path = Path(frame.filename)
-
-    __ensure_lang_file(path, lang, True)
-    __ensure_lang_file(path, "en-US", True)
-
-    langs = PATHS[path]
-    localized = langs.get(lang, {}).get(key, None) or langs.get("en-US", {}).get(key, key)
-
-    return localized if key == localized else localized.format(*formatting_params)
+    return __localize(key, lang, *formatting_params)

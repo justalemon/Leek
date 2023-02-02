@@ -44,13 +44,8 @@ def main():
         LOGGER.error("Discord Token is not set")
         sys.exit(2)
 
-    connection_info = get_sql_connection()
-
-    if connection_info is None:
-        LOGGER.warning("SQL Connection Info not present, cogs that require DB support will not work")
-
     bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0",
-                  pool_info=connection_info,
+                  pool_info=get_sql_connection(),
                   intents=Intents.all())
 
     cogs_to_load = os.environ.get("DISCORD_COGS", "").split(",")

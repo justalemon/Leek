@@ -10,7 +10,7 @@ import aiohttp
 import aiomysql
 from aiohttp.client import _RequestContextManager
 from aiomysql import Pool, Connection
-from discord import AutoShardedBot, ApplicationContext, DiscordException, Embed, slash_command, SlashCommand
+from discord import AutoShardedBot, ApplicationContext, DiscordException, Embed, SlashCommand
 
 from .localization import localize, get_default, get_localizations
 

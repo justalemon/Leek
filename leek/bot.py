@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import traceback
+from importlib.metadata import version
 from pathlib import Path
 from typing import Optional
 
@@ -9,9 +10,9 @@ import aiohttp
 import aiomysql
 from aiohttp.client import _RequestContextManager
 from aiomysql import Pool, Connection
-from discord import AutoShardedBot, ApplicationContext, DiscordException
+from discord import AutoShardedBot, ApplicationContext, DiscordException, Embed, slash_command, SlashCommand
 
-from .localization import localize
+from .localization import localize, get_default, get_localizations
 
 LOGGER = logging.getLogger("leek")
 
@@ -40,6 +41,13 @@ class LeekBot(AutoShardedBot):
         self.__pool_info: Optional[dict] = pool_info
         self.__pool: Optional[Pool] = None
         super().__init__(*args, **kwargs)
+
+        command = SlashCommand(self.__about,
+                               name=get_default("BOT_COMMAND_ABOUT_NAME"),
+                               description=get_default("BOT_COMMAND_ABOUT_DESCRIPTION"),
+                               name_localizations=get_localizations("BOT_COMMAND_ABOUT_NAME"),
+                               description_localizations=get_localizations("BOT_COMMAND_ABOUT_DESCRIPTION"))
+        self.add_application_command(command)
 
     async def __ensure_sesion(self):
         if self.__session is None:
@@ -144,3 +152,27 @@ class LeekBot(AutoShardedBot):
             await ctx.respond(localize("BOT_EXCEPTION_OCURRED", ctx.locale), ephemeral=True)
 
         await super().on_application_command_error(ctx, exception)
+
+    async def __about(self, ctx: ApplicationContext):
+        yes = localize("YES", ctx.locale)
+        no = localize("NO", ctx.locale)
+
+        embed = Embed()
+        embed.colour = 0x499529
+        embed.title = localize("BOT_COMMAND_ABOUT_TITLE", ctx.locale)
+        embed.url = "https://github.com/LeekByLemon"
+        embed.description = localize("BOT_COMMAND_ABOUT_BODY", ctx.locale)
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/99556316")
+        embed.set_footer(text=localize("BOT_COMMAND_ABOUT_FOOTER", ctx.locale))
+
+        embed.add_field(name=localize("BOT_COMMAND_ABOUT_VERSION", ctx.locale),
+                        value=version("leekbot"),
+                        inline=True)
+        embed.add_field(name=localize("BOT_COMMAND_ABOUT_DOCKER", ctx.locale),
+                        value=yes if self.is_in_docker else no,
+                        inline=True)
+        embed.add_field(name=localize("BOT_COMMAND_ABOUT_COGS", ctx.locale),
+                        value=str(len(self.cogs)),
+                        inline=True)
+
+        await ctx.respond(embed=embed)

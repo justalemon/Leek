@@ -1,3 +1,14 @@
 {
-    "BOT_EXCEPTION_OCURRED": "An exception has occurred. Please contact the bot owner."
+    "YES": "Yes",
+    "NO": "No",
+
+    "BOT_EXCEPTION_OCURRED": "An exception has occurred. Please contact the bot owner.",
+    "BOT_COMMAND_ABOUT_NAME": "about",
+    "BOT_COMMAND_ABOUT_DESCRIPTION": "Shows information about the Bot",
+    "BOT_COMMAND_ABOUT_TITLE": "About Leek",
+    "BOT_COMMAND_ABOUT_BODY": "Leek is a Discord Bot Framework built on top of Pycord to ease the development and keeps things DRY.",
+    "BOT_COMMAND_ABOUT_VERSION": "Version",
+    "BOT_COMMAND_ABOUT_DOCKER": "Using Docker",
+    "BOT_COMMAND_ABOUT_COGS": "Number of Cogs",
+    "BOT_COMMAND_ABOUT_FOOTER": "Created with ❤️ by Lemon"
 }

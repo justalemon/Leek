@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import traceback
+from pathlib import Path
 from typing import Optional
 
 import aiohttp
@@ -13,6 +14,11 @@ from discord import AutoShardedBot, ApplicationContext, DiscordException
 from .localization import localize
 
 LOGGER = logging.getLogger("leek")
+
+
+def _is_running_on_docker():
+    cgroup = Path("/proc/self/cgroup")
+    return cgroup.is_file() and cgroup.read_text().find("docker") > -1
 
 
 class LeekBot(AutoShardedBot):
@@ -28,6 +34,7 @@ class LeekBot(AutoShardedBot):
             pool_info["maxsize"] = 0
             pool_info["pool_recycle"] = 60.0
 
+        self.__docker = _is_running_on_docker()
         self.__session: Optional[aiohttp.ClientSession] = None
         self.__debug: bool = debug
         self.__pool_info: Optional[dict] = pool_info
@@ -39,6 +46,13 @@ class LeekBot(AutoShardedBot):
             self.__session = aiohttp.ClientSession(headers={
                 "User-Agent": "Leek/0.0.1"
             })
+
+    @property
+    def is_in_docker(self) -> bool:
+        """
+        Checks if the bot is running on a Docker container.
+        """
+        return self.__docker
 
     @property
     def debug(self):

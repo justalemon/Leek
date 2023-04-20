@@ -18,8 +18,8 @@ LOGGER = logging.getLogger("leek")
 
 
 def _is_running_on_docker():
-    cgroup = Path("/proc/self/cgroup")
-    return cgroup.is_file() and cgroup.read_text().find("docker") > -1
+    mountinfo = Path("/proc/1/mountinfo")
+    return mountinfo.is_file() and mountinfo.read_text().find("/var/lib/docker/containers/") > -1
 
 
 class LeekBot(AutoShardedBot):

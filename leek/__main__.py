@@ -16,7 +16,7 @@ from .bot import LeekBot
 LOGGER = logging.getLogger("leek")
 
 
-def get_int_safe(key: str, default: Optional[int] = None):
+def _get_int_safe(key: str, default: Optional[int] = None):
     try:
         return int(os.environ.get(key, default))
     except TypeError:
@@ -28,10 +28,10 @@ def get_int_safe(key: str, default: Optional[int] = None):
         return None
 
 
-def get_sql_connection():
+def _get_sql_connection():
     config = {
         "host": os.environ.get("SQL_HOST", "127.0.0.1"),
-        "port": get_int_safe("SQL_PORT", 3306),
+        "port": _get_int_safe("SQL_PORT", 3306),
         "user": os.environ.get("SQL_USER", None),
         "password": os.environ.get("SQL_PASSWORD", None),
         "db": os.environ.get("SQL_DB", "leek")
@@ -52,7 +52,7 @@ def main():
         sys.exit(2)
 
     bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0",
-                  pool_info=get_sql_connection(),
+                  pool_info=_get_sql_connection(),
                   intents=Intents.all())
 
     cogs_to_load = os.environ.get("DISCORD_COGS", "").split(",")

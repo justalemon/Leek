@@ -43,6 +43,12 @@ dynamic = [
 [project.urls]
 Homepage = "https://github.com/LeekByLemon/Leek"
 
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.0.274,<1.0.0",
+    "build>=0.0.274,<1.0.0",
+]
+
 [tool.setuptools]
 packages = [
     "leek"
@@ -54,4 +60,13 @@ readme = { file = ["README.md"], content-type = "text/markdown" }
 [tool.setuptools.package-data]
 "*" = [
     "*.json"
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = [
+    "F401",
+    "F403"
 ]

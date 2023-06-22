@@ -6,7 +6,6 @@ import inspect
 import json
 import logging
 from pathlib import Path
-from typing import Any
 
 LOGGER = logging.getLogger("leek")
 LOCALES = [
@@ -44,7 +43,14 @@ LOCALES = [
 PATHS: dict[Path, dict[str, dict[str, str]]] = {}
 
 
-def __localize(key: str, locale: str, *formatting_params: object):
+def __localize(key: str, locale: str, *formatting_params: object) -> str:
+    """
+    Localizes a specific string.
+    :param key: The label to localize.
+    :param locale: The locale to use.
+    :param formatting_params: The parameters used to format the label.
+    :return: The localized and formatted string, or the label if it couldn't be found.
+    """
     stack = inspect.stack()
     frame = stack[2]
     path = Path(frame.filename)
@@ -59,6 +65,12 @@ def __localize(key: str, locale: str, *formatting_params: object):
 
 
 def __ensure_lang_file(path: Path, lang: str, log: bool) -> None:
+    """
+    Checks whether a specific localization file has been loaded, and loads if it hasn't.
+    :param path: The directory where the localization files are located.
+    :param lang: The locale to load.
+    :param log: Whether to log the loading of this file.
+    """
     if path in PATHS and lang in PATHS[path]:
         return
 

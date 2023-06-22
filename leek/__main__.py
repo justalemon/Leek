@@ -97,7 +97,8 @@ def main() -> None:
 
         try:
             bot.add_cog(cog(bot))
-        except Exception:
+        except Exception:  # noqa: BLE001
+            # We catch everything because we don't know what exception might be triggered
             LOGGER.exception(f"Unable to start '{name}'")
         finally:
             LOGGER.info(f"Added cog {name}")

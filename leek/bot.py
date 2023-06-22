@@ -10,7 +10,7 @@ import aiohttp
 import aiomysql
 from aiohttp.client import _RequestContextManager
 from aiomysql import Pool, Connection
-from discord import AutoShardedBot, ApplicationContext, DiscordException, Embed, SlashCommand
+from discord import AutoShardedBot, ApplicationContext, DiscordException, Embed, SlashCommand, NotFound
 
 from .localization import localize, get_default, get_localizations
 
@@ -147,9 +147,14 @@ class LeekBot(AutoShardedBot):
         if self.debug:
             info = traceback.format_exception(type(exception), exception, exception.__traceback__)
             text = "\n".join(info)
-            await ctx.respond(f"```\n{text}\n```", ephemeral=True)
+            message = f"```\n{text}\n```"
         else:
-            await ctx.respond(localize("BOT_EXCEPTION_OCURRED", ctx.locale), ephemeral=True)
+            message = localize("BOT_EXCEPTION_OCURRED", ctx.locale)
+
+        try:
+            await ctx.respond(message, ephemeral=True)
+        except NotFound:
+            await ctx.send(message, delete_after=60)
 
         await super().on_application_command_error(ctx, exception)
 

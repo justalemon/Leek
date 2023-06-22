@@ -1,3 +1,7 @@
+"""
+Starts the Leek bot and the desired cogs.
+"""
+
 import importlib
 import logging
 import os
@@ -36,6 +40,9 @@ def get_sql_connection():
 
 
 def main():
+    """
+    Starts the bot.
+    """
     logging.basicConfig(level=logging.INFO)
 
     load_dotenv()

@@ -1,3 +1,7 @@
+"""
+The tools for the localization of strings in the Leek bot.
+"""
+
 import inspect
 import json
 import logging
@@ -77,6 +81,11 @@ def __ensure_lang_file(path: Path, lang: str, log: bool):
 
 
 def get_localizations(key: str):
+    """
+    Gets all the available localizations for a specific label.
+    :param key: The label to localize.
+    :return: A dictionary with all the locales as keys and the localized versions as values.
+    """
     stack = inspect.stack()
     frame = stack[1]
     path = Path(frame.filename)
@@ -93,8 +102,21 @@ def get_localizations(key: str):
 
 
 def localize(key: str, lang: str, *formatting_params: Any):
+    """
+    Gets a label on a specific locale.
+    :param key: The label to localize.
+    :param lang: The locale to use.
+    :param formatting_params: The parameters to format this label.
+    :return: The formatted label in the specified locale, or the label itself if is not present.
+    """
     return __localize(key, lang, *formatting_params)
 
 
 def get_default(key: str, *formatting_params: Any):
+    """
+    Gets the default english localization of a specific label.
+    :param key: The label to localize.
+    :param formatting_params: The desired parameters to format this label.
+    :return: The formatted label in US English, or the label itself if is not present.
+    """
     return __localize(key, "en-US", *formatting_params)

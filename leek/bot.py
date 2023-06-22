@@ -8,15 +8,17 @@ import logging
 import traceback
 from importlib.metadata import version
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import aiohttp
 import aiomysql
-from aiohttp.client import _RequestContextManager
 from aiomysql import Connection, Pool
 from discord import ApplicationContext, AutoShardedBot, DiscordException, Embed, NotFound, SlashCommand
 
 from .localization import get_default, get_localizations, localize
+
+if TYPE_CHECKING:
+    from aiohttp.client import _RequestContextManager
 
 LOGGER = logging.getLogger("leek")
 

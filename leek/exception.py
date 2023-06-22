@@ -9,7 +9,6 @@ class LeekError(Exception):
     """
     The basic exception for all Leek exceptions.
     """
-    pass
 
 
 class DatabaseRequiredError(LeekError):

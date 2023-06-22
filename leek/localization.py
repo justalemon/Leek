@@ -44,7 +44,7 @@ LOCALES = [
 PATHS: dict[Path, dict[str, dict[str, str]]] = {}
 
 
-def __localize(key: str, locale: str, *formatting_params: Any):
+def __localize(key: str, locale: str, *formatting_params: object):
     stack = inspect.stack()
     frame = stack[2]
     path = Path(frame.filename)
@@ -58,7 +58,7 @@ def __localize(key: str, locale: str, *formatting_params: Any):
     return localized if key == localized else localized.format(*formatting_params)
 
 
-def __ensure_lang_file(path: Path, lang: str, log: bool):
+def __ensure_lang_file(path: Path, lang: str, log: bool) -> None:
     if path in PATHS and lang in PATHS[path]:
         return
 
@@ -80,7 +80,7 @@ def __ensure_lang_file(path: Path, lang: str, log: bool):
     PATHS[path] = langs
 
 
-def get_localizations(key: str):
+def get_localizations(key: str) -> dict[str, str]:
     """
     Gets all the available localizations for a specific label.
     :param key: The label to localize.
@@ -101,7 +101,7 @@ def get_localizations(key: str):
     return localized
 
 
-def localize(key: str, lang: str, *formatting_params: Any):
+def localize(key: str, lang: str, *formatting_params: object) -> str:
     """
     Gets a label on a specific locale.
     :param key: The label to localize.
@@ -112,7 +112,7 @@ def localize(key: str, lang: str, *formatting_params: Any):
     return __localize(key, lang, *formatting_params)
 
 
-def get_default(key: str, *formatting_params: Any):
+def get_default(key: str, *formatting_params: object) -> str:
     """
     Gets the default english localization of a specific label.
     :param key: The label to localize.

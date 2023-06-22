@@ -8,7 +8,7 @@ import os
 import sys
 from typing import Optional
 
-from discord import Intents, Cog
+from discord import Cog, Intents
 from dotenv import load_dotenv
 
 from .bot import LeekBot

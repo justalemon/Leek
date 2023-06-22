@@ -36,10 +36,10 @@ setup(
         "Topic :: Communications :: Chat",
     ],
     install_requires=[
-        "py-cord[speed]>=2.3.2,<3.0.0",
-        "aiomysql[speed]>=0.1.1,<1.0.0",
-        "python-dotenv>=0.21.0,<1.0.0",
-        "aiohttp>=3.6.0,<4.0.0"
+        "py-cord[speed]>=2.4.1,<3.0.0",
+        "aiomysql[speed]>=0.2.0,<1.0.0",
+        "python-dotenv>=1.0.0,<2.0.0",
+        "aiohttp>=3.8.4,<4.0.0"
     ],
     python_requires=">=3.8",
     package_data={

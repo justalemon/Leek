@@ -67,10 +67,10 @@ def main() -> None:
 
     cogs_to_load = os.environ.get("DISCORD_COGS", "").split(",")
 
-    for name in cogs_to_load:
-        name = name.strip()
+    for cog_name in cogs_to_load:
+        name = cog_name.strip()
 
-        if name == "":
+        if not name:
             continue
 
         split = name.split(":")

@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Optional
 import aiohttp
 import aiomysql
 from aiomysql import Connection, Pool
-from discord import ApplicationContext, AutoShardedBot, DiscordException, Embed, NotFound, SlashCommand
+from discord import ApplicationContext, AutoShardedBot, DiscordException, Embed, HTTPException, NotFound, SlashCommand
 
 from .localization import get_default, get_localizations, localize
 
@@ -182,6 +182,8 @@ class LeekBot(AutoShardedBot):
             await ctx.respond(message, ephemeral=True)
         except NotFound:
             await ctx.send(message, delete_after=60)
+        except HTTPException:
+            await ctx.respond(localize("BOT_EXCEPTION_OCURRED", ctx.locale), ephemeral=True)
 
         await super().on_application_command_error(ctx, exception)
 

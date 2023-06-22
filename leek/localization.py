@@ -77,7 +77,7 @@ def __ensure_lang_file(path: Path, lang: str, log: bool) -> None:
     lang_path = path.with_suffix(f".{lang}.json")
 
     try:
-        with open(lang_path, encoding="utf-8") as file:
+        with lang_path.open(encoding="utf-8") as file:
             lines: dict[str, str] = json.load(file)
     except FileNotFoundError:
         if log:

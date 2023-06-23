@@ -29,7 +29,7 @@ jobs:
       - uses: justalemon/VersionPatcher@v0.7
         with:
           version: 0.0.1-alpha.${{ github.run_number }}
-          csproj-files: "**/root.props"
+          pyproject-files: "pyproject.toml"
       - run: pip install .[dev]
       - run: python -m build
       - uses: actions/upload-artifact@v3.1.2

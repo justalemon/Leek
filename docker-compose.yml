@@ -2,9 +2,8 @@ version: "3.9"
 
 services:
   mariadb:
-    container_name: leek_db
-    hostname: leek_db
-    image: mariadb:10.10.2-jammy
+    hostname: mariadb
+    image: mariadb:10.11.7-jammy
     volumes:
       - ./data:/var/lib/mysql:rw
     restart: always
@@ -15,14 +14,13 @@ services:
       - .env
 
   bot:
-    container_name: leek_bot
-    hostname: leek_bot
-    build: .
+    hostname: bot
+    image: ghcr.io/justalemon/leek:latest
     depends_on:
       mariadb:
         condition: service_started
     environment:
-      SQL_HOST: leek_db
+      SQL_HOST: mariadb
       SQL_DB: leek
     env_file:
       - .env

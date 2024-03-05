@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: 3.11
       - run: pip install .[dev]
-      - run: python -m ruff --format=github .
+      - run: python -m ruff check --output-format=github .
   build:
     runs-on: ubuntu-22.04
     needs:

@@ -7,6 +7,7 @@ import logging
 from typing import Optional
 
 from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, Permissions, slash_command
+
 from leek import LeekBot, get_default, get_localizations, localize
 
 LOGGER = logging.getLogger("leek_moderation")

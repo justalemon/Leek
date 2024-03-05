@@ -30,7 +30,7 @@ def _get_int_safe(key: str, default: Optional[int] = None) -> Optional[int]:
     except KeyError:
         return None
     except ValueError:
-        LOGGER.error(f"Environment variable {key} is not a valid number!")
+        LOGGER.exception("Environment variable %s is not a valid number!", key)
         return None
 
 
@@ -76,32 +76,32 @@ def main() -> None:
         split = name.split(":")
 
         if len(split) != 2:
-            LOGGER.error(f"Cog name '{name}' is not in the right format")
+            LOGGER.error("Cog name '%s' is not in the right format", name)
             continue
 
         try:
             imported = importlib.import_module(split[0])
         except ModuleNotFoundError:
-            LOGGER.error(f"Unable to import '{name}' because it couldn't be found")
+            LOGGER.exception("Unable to import '%s' because it couldn't be found", name)
             continue
 
         if not hasattr(imported, split[1]):
-            LOGGER.error(f"Unable to load '{split[1]}' from '{split[1]} because the class does not exists")
+            LOGGER.error("Unable to load '%s' from '%s' because the class does not exists", split[1], split[1])
             continue
 
         cog = getattr(imported, split[1])
 
         if not issubclass(cog, Cog):
-            LOGGER.error(f"Class '{name}' does not inherits from a Cog")
+            LOGGER.error("Class '%s' does not inherits from a Cog", name)
             continue
 
         try:
             bot.add_cog(cog(bot))
-        except Exception:  # noqa: BLE001
+        except Exception:
             # We catch everything because we don't know what exception might be triggered
-            LOGGER.exception(f"Unable to start '{name}'")
+            LOGGER.exception("Unable to start '%s'", name)
         finally:
-            LOGGER.info(f"Added cog {name}")
+            LOGGER.info("Added cog %s", name)
 
     bot.run(os.environ["DISCORD_TOKEN"])
 

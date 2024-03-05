@@ -1,8 +1,12 @@
+"""
+Tool used to diagnose the SHVDN Log Files.
+"""
+
 import re
 
-from discord import Cog, ApplicationContext, message_command, Message, Embed
-from leek import LeekBot, get_default
+from discord import ApplicationContext, Cog, Embed, Message, message_command
 
+from leek import LeekBot, get_default
 
 RE_SHVDN = re.compile("\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[(WARNING|ERROR)] (.*)")
 RE_INSTANCE = re.compile("A script tried to use a custom script instance of type ([A-Za-z0-9_.]*) that was not "
@@ -30,12 +34,69 @@ FATAL_EXCEPTION = "Caught fatal unhandled exception:"
 ABORTED_SCRIPT = "Aborted script "
 
 
+def get_problems(lines: list[str]) -> list[str]:  # noqa: C901
+    """
+    Gets the problems in the lines of a file.
+    """
+    problems = []
+
+    for line in lines:
+        match = RE_SHVDN.search(line)
+
+        if match is None:
+            continue
+
+        level, details = match.groups()
+
+        if level not in LEVELS or details == FATAL_EXCEPTION or details.startswith(ABORTED_SCRIPT):
+            continue
+
+        emoji = LEVELS[level]
+        matched = False
+
+        for match, text in MATCHES.items():
+            if isinstance(match, re.Pattern):
+                matches = match.match(details)
+
+                if matches is None:
+                    continue
+
+                message = f"{emoji} " + text.format(*matches.groups())
+            elif isinstance(match, str):
+                if not details.startswith(match):
+                    continue
+
+                message = f"{emoji} {text}"
+            else:
+                continue
+
+            if message not in problems:
+                problems.append(message)
+
+            matched = True
+            break
+
+        if not matched:
+            problems.append(f"{emoji} Unknown ({details})")
+
+    return problems
+
+
 class Diagnoser(Cog):
+    """
+    A Cog used to diagnose log files of ScriptHookVDotNet.
+    """
     def __init__(self, bot: LeekBot):
+        """
+        Creates a new diagnoser.
+        """
         self.bot = bot
 
     @message_command(name=get_default("MODDING_MESSAGE_DIAGNOSE_NAME"))
-    async def diagnose(self, ctx: ApplicationContext, message: Message):
+    async def diagnose(self, ctx: ApplicationContext, message: Message) -> None:
+        """
+        Tries to make a partial diagnostic of a SHVDN Log File.
+        """
         if not message.attachments:
             await ctx.respond("There are no log files attached to this message.")
             return
@@ -54,46 +115,7 @@ class Diagnoser(Cog):
             content = await response.text()
             lines = content.splitlines()
 
-        problems = []
-
-        for line in lines:
-            match = RE_SHVDN.search(line)
-
-            if match is None:
-                continue
-
-            level, details = match.groups()
-
-            if level not in LEVELS or details == FATAL_EXCEPTION or details.startswith(ABORTED_SCRIPT):
-                continue
-
-            emoji = LEVELS[level]
-            matched = False
-
-            for match, text in MATCHES.items():
-                if isinstance(match, re.Pattern):
-                    matches = match.match(details)
-
-                    if matches is None:
-                        continue
-
-                    message = f"{emoji} " + text.format(*matches.groups())
-                elif isinstance(match, str):
-                    if not details.startswith(match):
-                        continue
-
-                    message = f"{emoji} {text}"
-                else:
-                    continue
-
-                if message not in problems:
-                    problems.append(message)
-
-                matched = True
-                break
-
-            if not matched:
-                problems.append(f"{emoji} Unknown ({details})")
+        problems = get_problems(lines)
 
         if not problems:
             await ctx.respond("Couldn't detect any issues with the log file.")

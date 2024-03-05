@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  mariadb:
+    container_name: leek_db
+    hostname: leek_db
+    image: mariadb:10.10.2-jammy
+    volumes:
+      - ./data:/var/lib/mysql:rw
+    restart: always
+    environment:
+      MARIADB_USER: ${SQL_USER}
+      MARIADB_PASSWORD: ${SQL_PASSWORD}
+    env_file:
+      - .env
+
+  bot:
+    container_name: leek_bot
+    hostname: leek_bot
+    build: .
+    depends_on:
+      mariadb:
+        condition: service_started
+    environment:
+      SQL_HOST: leek_db
+      SQL_DB: leek
+    env_file:
+      - .env

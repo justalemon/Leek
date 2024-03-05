@@ -1,0 +1,13 @@
+{
+    "TAGS_NOT_FOUND": "The tag `{0}` does not exists.",
+    "TAGS_ADD_OKAY": "The tag `{0}` was creado!",
+    "TAGS_ADD_DUPE": "The tag `{0}` already exists!",
+    "TAGS_DELETE_OKAY": "The tag `{0}` was successfully deleted!`",
+
+    "TAGS_COMMAND_TAG_NAME": "tag",
+    "TAGS_COMMAND_TAG_DESC": "Views a specific tag.",
+    "TAGS_COMMAND_CREATETAG_NAME": "createtag",
+    "TAGS_COMMAND_CREATETAG_DESC": "Creates a new tag.",
+    "TAGS_COMMAND_DELETETAG_NAME": "deletetag",
+    "TAGS_COMMAND_DELETETAG_DESC": "Deletes an existing tag."
+}

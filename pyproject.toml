@@ -49,10 +49,8 @@ dev = [
     "build>=0.0.274,<1.0.0",
 ]
 
-[tool.setuptools]
-packages = [
-    "leek"
-]
+[tool.setuptools.packages.find]
+namespaces = false
 
 [tool.setuptools.dynamic]
 readme = { file = ["README.md"], content-type = "text/markdown" }

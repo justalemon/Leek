@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 import traceback
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
@@ -26,6 +26,13 @@ LOGGER = logging.getLogger("leek")
 def _is_running_on_docker() -> bool:
     mountinfo = Path("/proc/1/mountinfo")
     return mountinfo.is_file() and mountinfo.read_text().find("/var/lib/docker/containers/") > -1
+
+
+def _get_version() -> str:
+    try:
+        return version("leekbot")
+    except PackageNotFoundError:
+        return "Unknown"
 
 
 class LeekBot(AutoShardedBot):
@@ -200,7 +207,7 @@ class LeekBot(AutoShardedBot):
         embed.set_footer(text=localize("BOT_COMMAND_ABOUT_FOOTER", ctx.locale))
 
         embed.add_field(name=localize("BOT_COMMAND_ABOUT_VERSION", ctx.locale),
-                        value=version("leekbot"),
+                        value=_get_version(),
                         inline=True)
         embed.add_field(name=localize("BOT_COMMAND_ABOUT_DOCKER", ctx.locale),
                         value=yes if self.is_in_docker else no,

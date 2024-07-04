@@ -5,3 +5,7 @@ updates:
     directory: /
     schedule: 
       interval: daily
+    labels:
+      - "priority: p3 low"
+      - "type: dependencies"
+      - "status: acknowledged"

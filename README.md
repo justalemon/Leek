@@ -1,23 +1,27 @@
 # Leek<br>[![GitHub Actions][actions-img]][actions-url] [![Patreon][patreon-img]][patreon-url] [![PayPal][paypal-img]][paypal-url] [![Discord][discord-img]][discord-url]
 
-> WARNING: Please note that Leek is an experimental work in progress project, and as such, the API might change unexpectedly at any time.
+Leek is a simple and easy to use Discord Bot created by Lemon. It contains a very diverse set of tools that can be enabled or disabled as you wish.
 
-Leek is a simple and easy to use Discord Bot Framework. It allows you to easily create and manage Discord Bots for any server, no matter the size.
+Right now, it has the following features:
+
+- Hyperping: Reports Healthchecks to Hyperping when the Bot is running
+- Log Diagnoser: Diagnoses the Log files of ScriptHookVDotNet, giving a quick suggestion for fixes
+- Native Lookup: Allows you to search for GTA V and RDR2 natives from Discord
+- Tags: Allows you to write, save and show different Tags with messages
 
 ## Download
 
+* [GitHub Image](https://github.com/justalemon/Leek/pkgs/container/leek)
 * [GitHub Releases](https://github.com/justalemon/Leek/releases)
 * [GitHub Actions](https://github.com/justalemon/Leek/actions) (experimental versions)
 
 ## Installation
 
-Run the following command to install the latest version of Leek from master.
+The recommended way to use the Leek bot is via the Docker container. You can pull the image with `docker pull ghcr.io/justalemon/leek`, which can then be used directly or via Docker Compose. You can use the provided [docker-compose.yml](docker-compose.yml) as a template.
 
-```
-pip install https://github.com/justalemon/Leek/archive/master.zip
-```
+You can also install the Python package directly to the system interpreter with `pip install https://github.com/justalemon/Leek/archive/master.zip`. 
 
-If you want to install from git for developent purposes, run the following commands:
+If you want to install from git for development purposes, you can also run the following commands:
 
 ```
 git clone https://github.com/justalemon/Leek.git leek
@@ -27,7 +31,9 @@ pip install -e .
 
 ## Usage
 
-Leek allows you to configure your bot just by using a `.env` file. On this `.env` file, you can configure the following options:
+Leek allows you to configure your bot just by using environment variables via the terminal or a .env files. The following configuration options are available:
+
+#### Bot
 
 * DISCORD_TOKEN: The Discord Bot Token (required)
 * DISCORD_DEBUG: Whether Debug features are enabled or not (optional, set it to anything other than zero to enable)
@@ -38,7 +44,12 @@ Leek allows you to configure your bot just by using a `.env` file. On this `.env
 * SQL_PASSWORD: The password for the SQL connection (optional, but required if you want to use SQL support)
 * SQL_DB: The name of the SQL database (optional, defaults to `discord`)
 
-After setting the required configuration options, you can start the bot by using `python -m leek`.
+#### Hyperping
+
+- HYPERPING_URL: The URL that will be used for the pings
+- HYPERPING_DELAY: The delay used to trigger between each ping
+
+After setting the required configuration options, you can start the bot as usual. If you are using the package directly, you can start the bot by using `python -m leek`.
 
 [actions-img]: https://img.shields.io/github/actions/workflow/status/justalemon/Leek/main.yml?branch=master&label=actions
 [actions-url]: https://github.com/justalemon/Leek/actions

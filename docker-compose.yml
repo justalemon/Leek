@@ -3,7 +3,7 @@ version: "3.9"
 services:
   mariadb:
     hostname: mariadb
-    image: mariadb:10.11.7-jammy
+    image: mariadb:11.2.4-jammy
     volumes:
       - ./data:/var/lib/mysql:rw
     restart: always

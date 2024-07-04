@@ -15,7 +15,7 @@ import aiomysql
 from aiomysql import Connection, Pool
 from discord import ApplicationContext, AutoShardedBot, DiscordException, Embed, HTTPException, NotFound, SlashCommand
 
-from .localization import get_default, get_localizations, localize
+from .localization import d, la, l
 
 if TYPE_CHECKING:
     from aiohttp.client import _RequestContextManager
@@ -66,10 +66,10 @@ class LeekBot(AutoShardedBot):
         super().__init__(*args, **kwargs)
 
         command = SlashCommand(self.__about,
-                               name=get_default("BOT_COMMAND_ABOUT_NAME"),
-                               description=get_default("BOT_COMMAND_ABOUT_DESCRIPTION"),
-                               name_localizations=get_localizations("BOT_COMMAND_ABOUT_NAME"),
-                               description_localizations=get_localizations("BOT_COMMAND_ABOUT_DESCRIPTION"))
+                               name=d("BOT_COMMAND_ABOUT_NAME"),
+                               description=d("BOT_COMMAND_ABOUT_DESCRIPTION"),
+                               name_localizations=la("BOT_COMMAND_ABOUT_NAME"),
+                               description_localizations=la("BOT_COMMAND_ABOUT_DESCRIPTION"))
         self.add_application_command(command)
 
     async def __ensure_sesion(self) -> None:
@@ -183,36 +183,36 @@ class LeekBot(AutoShardedBot):
             text = "\n".join(info)
             message = f"```\n{text}\n```"
         else:
-            message = localize("BOT_EXCEPTION_OCURRED", ctx.locale)
+            message = l("BOT_EXCEPTION_OCURRED", ctx.locale)
 
         try:
             await ctx.respond(message, ephemeral=True)
         except NotFound:
             await ctx.send(message, delete_after=60)
         except HTTPException:
-            await ctx.respond(localize("BOT_EXCEPTION_OCURRED", ctx.locale), ephemeral=True)
+            await ctx.respond(l("BOT_EXCEPTION_OCURRED", ctx.locale), ephemeral=True)
 
         await super().on_application_command_error(ctx, exception)
 
     async def __about(self, ctx: ApplicationContext) -> None:
-        yes = localize("YES", ctx.locale)
-        no = localize("NO", ctx.locale)
+        yes = l("YES", ctx.locale)
+        no = l("NO", ctx.locale)
 
         embed = Embed()
         embed.colour = 0x499529
-        embed.title = localize("BOT_COMMAND_ABOUT_TITLE", ctx.locale)
+        embed.title = l("BOT_COMMAND_ABOUT_TITLE", ctx.locale)
         embed.url = "https://github.com/justalemon/Leek"
-        embed.description = localize("BOT_COMMAND_ABOUT_BODY", ctx.locale)
+        embed.description = l("BOT_COMMAND_ABOUT_BODY", ctx.locale)
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/99556316")
-        embed.set_footer(text=localize("BOT_COMMAND_ABOUT_FOOTER", ctx.locale))
+        embed.set_footer(text=l("BOT_COMMAND_ABOUT_FOOTER", ctx.locale))
 
-        embed.add_field(name=localize("BOT_COMMAND_ABOUT_VERSION", ctx.locale),
+        embed.add_field(name=l("BOT_COMMAND_ABOUT_VERSION", ctx.locale),
                         value=_get_version(),
                         inline=True)
-        embed.add_field(name=localize("BOT_COMMAND_ABOUT_DOCKER", ctx.locale),
+        embed.add_field(name=l("BOT_COMMAND_ABOUT_DOCKER", ctx.locale),
                         value=yes if self.is_in_docker else no,
                         inline=True)
-        embed.add_field(name=localize("BOT_COMMAND_ABOUT_COGS", ctx.locale),
+        embed.add_field(name=l("BOT_COMMAND_ABOUT_COGS", ctx.locale),
                         value=str(len(self.cogs)),
                         inline=True)
 

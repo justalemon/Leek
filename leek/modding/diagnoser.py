@@ -6,7 +6,7 @@ import re
 
 from discord import ApplicationContext, Cog, Embed, Message, message_command
 
-from leek import LeekBot, get_default
+from leek import LeekBot, d
 
 RE_SHVDN = re.compile("\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[(WARNING|ERROR)] (.*)")
 RE_INSTANCE = re.compile("A script tried to use a custom script instance of type ([A-Za-z0-9_.]*) that was not "
@@ -92,7 +92,7 @@ class Diagnoser(Cog):
         """
         self.bot = bot
 
-    @message_command(name=get_default("MODDING_MESSAGE_DIAGNOSE_NAME"))
+    @message_command(name=d("MODDING_MESSAGE_DIAGNOSE_NAME"))
     async def diagnose(self, ctx: ApplicationContext, message: Message) -> None:
         """
         Tries to make a partial diagnostic of a SHVDN Log File.

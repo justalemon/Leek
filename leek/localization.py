@@ -92,9 +92,9 @@ def __ensure_lang_file(path: Path, lang: str, log: bool) -> None:
     PATHS[path] = langs
 
 
-def get_localizations(key: str) -> dict[str, str]:
+def la(key: str) -> dict[str, str]:
     """
-    Gets all the available localizations for a specific label.
+    Gets the Localization in All languages for a specific label.
     :param key: The label to localize.
     :return: A dictionary with all the locales as keys and the localized versions as values.
     """
@@ -113,9 +113,9 @@ def get_localizations(key: str) -> dict[str, str]:
     return localized
 
 
-def localize(key: str, lang: str, *formatting_params: object) -> str:
+def l(key: str, lang: str, *formatting_params: object) -> str:
     """
-    Gets a label on a specific locale.
+    Gets the Localization of a label in a specific locale.
     :param key: The label to localize.
     :param lang: The locale to use.
     :param formatting_params: The parameters to format this label.
@@ -124,9 +124,9 @@ def localize(key: str, lang: str, *formatting_params: object) -> str:
     return __localize(key, lang, *formatting_params)
 
 
-def get_default(key: str, *formatting_params: object) -> str:
+def d(key: str, *formatting_params: object) -> str:
     """
-    Gets the default english localization of a specific label.
+    Gets the Default english localization of a specific label.
     :param key: The label to localize.
     :param formatting_params: The desired parameters to format this label.
     :return: The formatted label in US English, or the label itself if is not present.

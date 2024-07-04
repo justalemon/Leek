@@ -1,4 +1,4 @@
-FROM python:3.11.8-slim-bookworm
+FROM python:3.12.4-slim-bookworm
 LABEL "org.opencontainers.image.source"="https://github.com/justalemon/Leek"
 WORKDIR /app
 COPY leek/ ./leek

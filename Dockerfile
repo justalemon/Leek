@@ -13,7 +13,6 @@ LABEL "org.opencontainers.image.source"="https://github.com/justalemon/Leek"
 WORKDIR /dist
 COPY --from=build src/dist /dist
 RUN <<EOF
-ls -a /dist
 python -m pip install -U pip
 python -m pip install --find-links /dist/ leek
 rm -fr /dist

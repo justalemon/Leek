@@ -25,7 +25,7 @@ LOGGER = logging.getLogger("leek")
 
 def _is_running_on_docker() -> bool:
     mountinfo = Path("/proc/1/mountinfo")
-    return mountinfo.is_file() and mountinfo.read_text().find("/var/lib/docker/containers/") > -1
+    return mountinfo.is_file() and mountinfo.read_text().find("/docker/containers/") > -1
 
 
 def _get_version() -> str:

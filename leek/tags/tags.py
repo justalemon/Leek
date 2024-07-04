@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from discord import ApplicationContext, AutocompleteContext, Cog, Option, Permissions, slash_command
 from pymysql import IntegrityError
 
-from leek import DatabaseRequiredError, LeekBot, d, la, l
+from leek import DatabaseRequiredError, LeekBot, d, l, la
 
 if TYPE_CHECKING:
     from aiomysql import Cursor

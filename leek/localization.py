@@ -113,7 +113,7 @@ def la(key: str) -> dict[str, str]:
     return localized
 
 
-def l(key: str, lang: str, *formatting_params: object) -> str:
+def l(key: str, lang: str, *formatting_params: object) -> str:  # noqa: E743
     """
     Gets the Localization of a label in a specific locale.
     :param key: The label to localize.

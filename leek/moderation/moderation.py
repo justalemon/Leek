@@ -8,7 +8,7 @@ from typing import Optional
 
 from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, Permissions, slash_command
 
-from leek import LeekBot, d, la, l
+from leek import LeekBot, d, l, la
 
 LOGGER = logging.getLogger("leek_moderation")
 PERMISSIONS = Permissions(manage_messages=True)

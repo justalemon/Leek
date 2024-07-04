@@ -15,7 +15,7 @@ import aiomysql
 from aiomysql import Connection, Pool
 from discord import ApplicationContext, AutoShardedBot, DiscordException, Embed, HTTPException, NotFound, SlashCommand
 
-from .localization import d, la, l
+from .localization import d, l, la
 
 if TYPE_CHECKING:
     from aiohttp.client import _RequestContextManager

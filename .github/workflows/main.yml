@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5.1.0
         with:
           python-version: 3.12
-      - uses: justalemon/VersionPatcher@v0.7.2
+      - uses: justalemon/VersionPatcher@v0.8
         with:
           version: 0.0.1-alpha.${{ github.run_number }}
           pyproject-files: "pyproject.toml"

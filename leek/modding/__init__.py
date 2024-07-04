@@ -2,3 +2,4 @@
 
 from .diagnoser import Diagnoser
 from .rage import Rage
+from .modcomments import ModComments

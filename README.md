@@ -50,6 +50,10 @@ Leek allows you to configure your bot just by using environment variables via th
 - HYPERPING_URL: The URL that will be used for the pings
 - HYPERPING_DELAY: The delay used to trigger between each ping
 
+#### Mod Comments
+
+- MODCOMMENTS_DRIVER: The Selenium driver to use for fetching the web pages
+
 After setting the required configuration options, you can start the bot as usual. If you are using the package directly, you can start the bot by using `python -m leek`.
 
 [actions-img]: https://img.shields.io/github/actions/workflow/status/justalemon/Leek/main.yml?branch=master&label=actions

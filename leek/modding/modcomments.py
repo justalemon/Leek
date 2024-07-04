@@ -26,8 +26,8 @@ class ModComments(Cog):
 
         if desired_driver == "firefox":
             self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
-        elif desired_driver == "chromium":
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+        elif desired_driver == "chrome":
         else:
             raise ValueError(f"Unrecognized driver: {desired_driver}")
 

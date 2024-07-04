@@ -46,7 +46,7 @@ Homepage = "https://github.com/LeekByLemon/Leek"
 [project.optional-dependencies]
 dev = [
     "ruff>=0.0.274,<1.0.0",
-    "build>=0.0.274,<1.0.0",
+    "build>=1.2.1,<2.0.0",
 ]
 
 [tool.setuptools.packages.find]

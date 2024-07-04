@@ -48,6 +48,9 @@ dev = [
     "ruff>=0.5.0,<1.0.0",
     "build>=1.2.1,<2.0.0",
 ]
+extras = [
+    "selenium>=4.22.0,<5.0.0"
+]
 
 [tool.setuptools.packages.find]
 namespaces = false

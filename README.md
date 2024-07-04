@@ -53,6 +53,7 @@ Leek allows you to configure your bot just by using environment variables via th
 #### Mod Comments
 
 - MODCOMMENTS_DRIVER: The Selenium driver to use for fetching the web pages
+- MODCOMMENTS_HEADLESS: Whether to use the Headless mode of Firefox and Chrome, this is enabled by default
 
 After setting the required configuration options, you can start the bot as usual. If you are using the package directly, you can start the bot by using `python -m leek`.
 

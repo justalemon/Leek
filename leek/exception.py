@@ -21,3 +21,9 @@ class DatabaseRequiredError(LeekError):
         :param cog: The cog that requires the database connection.
         """
         super().__init__(f"Cog {cog.qualified_name} requires a database connection but is not available")
+
+
+class MissingFeatureError(LeekError):
+    """
+    An exception raised when a specific system feature or library is missing and is required.
+    """

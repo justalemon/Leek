@@ -9,6 +9,7 @@ updates:
       - "priority: p3 low"
       - "type: dependencies"
       - "status: acknowledged"
+    versioning-strategy: widen
   - package-ecosystem: docker
     directory: /
     schedule: 
@@ -17,6 +18,7 @@ updates:
       - "priority: p3 low"
       - "type: dependencies"
       - "status: acknowledged"
+    versioning-strategy: widen
   - package-ecosystem: github-actions
     directory: /
     schedule: 
@@ -25,3 +27,4 @@ updates:
       - "priority: p3 low"
       - "type: dependencies"
       - "status: acknowledged"
+    versioning-strategy: widen

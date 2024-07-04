@@ -41,7 +41,7 @@ dynamic = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/LeekByLemon/Leek"
+Homepage = "https://github.com/justalemon/Leek"
 
 [project.optional-dependencies]
 dev = [

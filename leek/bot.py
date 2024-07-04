@@ -201,7 +201,7 @@ class LeekBot(AutoShardedBot):
         embed = Embed()
         embed.colour = 0x499529
         embed.title = localize("BOT_COMMAND_ABOUT_TITLE", ctx.locale)
-        embed.url = "https://github.com/LeekByLemon"
+        embed.url = "https://github.com/justalemon/Leek"
         embed.description = localize("BOT_COMMAND_ABOUT_BODY", ctx.locale)
         embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/99556316")
         embed.set_footer(text=localize("BOT_COMMAND_ABOUT_FOOTER", ctx.locale))

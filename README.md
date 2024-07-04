@@ -6,21 +6,21 @@ Leek is a simple and easy to use Discord Bot Framework. It allows you to easily 
 
 ## Download
 
-* [GitHub Releases](https://github.com/LeekByLemon/Leek/releases)
-* [GitHub Actions](https://github.com/LeekByLemon/Leek/actions) (experimental versions)
+* [GitHub Releases](https://github.com/justalemon/Leek/releases)
+* [GitHub Actions](https://github.com/justalemon/Leek/actions) (experimental versions)
 
 ## Installation
 
 Run the following command to install the latest version of Leek from master.
 
 ```
-pip install https://github.com/LeekByLemon/Leek/archive/master.zip
+pip install https://github.com/justalemon/Leek/archive/master.zip
 ```
 
 If you want to install from git for developent purposes, run the following commands:
 
 ```
-git clone https://github.com/LeekByLemon/Leek.git leek
+git clone https://github.com/justalemon/Leek.git leek
 cd leek
 pip install -e .
 ```
@@ -40,8 +40,8 @@ Leek allows you to configure your bot just by using a `.env` file. On this `.env
 
 After setting the required configuration options, you can start the bot by using `python -m leek`.
 
-[actions-img]: https://img.shields.io/github/actions/workflow/status/LeekByLemon/Leek/main.yml?branch=master&label=actions
-[actions-url]: https://github.com/LeekByLemon/Leek/actions
+[actions-img]: https://img.shields.io/github/actions/workflow/status/justalemon/Leek/main.yml?branch=master&label=actions
+[actions-url]: https://github.com/justalemon/Leek/actions
 [patreon-img]: https://img.shields.io/badge/support-patreon-FF424D.svg
 [patreon-url]: https://www.patreon.com/lemonchan
 [paypal-img]: https://img.shields.io/badge/support-paypal-0079C1.svg

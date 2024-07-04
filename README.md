@@ -7,6 +7,7 @@ Right now, it has the following features:
 - Hyperping: Reports Healthchecks to Hyperping when the Bot is running
 - Log Diagnoser: Diagnoses the Log files of ScriptHookVDotNet, giving a quick suggestion for fixes
 - Native Lookup: Allows you to search for GTA V and RDR2 natives from Discord
+- Moderation: Some simple moderation functions that are not yet implemented in Discord
 - Tags: Allows you to write, save and show different Tags with messages
 
 ## Download

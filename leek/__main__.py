@@ -6,6 +6,7 @@ import importlib
 import logging
 import os
 import sys
+import warnings
 from typing import Optional, Union
 
 from discord import Cog, Intents
@@ -102,6 +103,8 @@ def main() -> None:
             LOGGER.exception("Unable to start '%s'", name)
         finally:
             LOGGER.info("Added cog %s", name)
+
+    warnings.filterwarnings(os.environ.get("SQL_WARNINGS", "ignore"), module="aiomysql")
 
     bot.run(os.environ["DISCORD_TOKEN"])
 

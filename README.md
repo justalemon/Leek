@@ -44,6 +44,7 @@ Leek allows you to configure your bot just by using environment variables via th
 * SQL_USER: The user for the SQL connection (optional, but required if you want to use SQL support)
 * SQL_PASSWORD: The password for the SQL connection (optional, but required if you want to use SQL support)
 * SQL_DB: The name of the SQL database (optional, defaults to `discord`)
+* SQL_WARNINGS: The [warning filter](https://docs.python.org/3/library/warnings.html#warning-filter) used for the SQL warnings (optional, defaults to `ignore`)
 
 #### Hyperping
 

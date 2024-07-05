@@ -2,8 +2,6 @@
 Cog for parsing comments from 5mods mod pages and sending them to channels.
 """
 
-from __future__ import annotations
-
 import os
 import re
 from typing import TYPE_CHECKING

@@ -18,6 +18,13 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 from leek import DatabaseRequiredError, LeekBot
 
+XPATH_ERROR = "//div[@class='dialog container']/div/h1"
+XPATH_COMMENTS = "//li[@class='comment media ']"
+XPATH_MOD_TITLE = "//div[@class='clearfix']/h1"
+XPATH_COMMENT_TEXT = ".//div[@class='comment-text ']/p"
+XPATH_COMMENT_AUTHOR = ".//div[@class='pull-left flip']/a"
+XPATH_COMMENT_IMAGE = ".//img[@class='media-object']"
+
 
 class ModComments(Cog):
     """

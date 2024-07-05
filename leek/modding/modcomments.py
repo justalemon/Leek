@@ -22,7 +22,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 from leek import DatabaseRequiredError, LeekBot
 
 if TYPE_CHECKING:
-    from aiohttp import Cursor
+    from aiomysql import Cursor
     from discord import ApplicationContext
     from selenium.webdriver.remote.webelement import WebElement
 

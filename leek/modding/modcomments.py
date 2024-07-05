@@ -5,6 +5,7 @@ Cog for parsing comments from 5mods mod pages and sending them to channels.
 from __future__ import annotations
 
 import os
+import re
 from typing import TYPE_CHECKING
 
 from discord import Cog, Embed, EmbedAuthor, TextChannel
@@ -26,6 +27,8 @@ if TYPE_CHECKING:
     from discord import ApplicationContext
     from selenium.webdriver.remote.webelement import WebElement
 
+RE_LINK = re.compile("https://www.gta5-mods.com/(tools|vehicles|paintjobs|weapons|scripts|player|maps|misc)"
+                     "/([a-z0-9\\-]+)")
 XPATH_ERROR = "//div[@class='dialog container']/div/h1"
 XPATH_COMMENTS = "//li[@class='comment media ']"
 XPATH_MOD_TITLE = "//div[@class='clearfix']/h1"

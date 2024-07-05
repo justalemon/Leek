@@ -36,6 +36,7 @@ SQL_CREATE = """CREATE TABLE IF NOT EXISTS mods (
     id INT NOT NULL AUTO_INCREMENT,
     type TEXT NOT NULL,
     slug TEXT NOT NULL,
+    guild BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     last INT DEFAULT 0,
     PRIMARY KEY (id)

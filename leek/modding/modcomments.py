@@ -4,7 +4,8 @@ Cog for parsing comments from 5mods mod pages and sending them to channels.
 
 import os
 
-from discord import Cog, ApplicationContext
+from discord import ApplicationContext, Cog
+from discord.ext import tasks
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -38,7 +39,7 @@ class ModComments(Cog):
                 options.add_argument("--headless=new")
             self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         else:
-            raise ValueError(f"Unrecognized driver: {desired_driver}")
+            raise ValueError(f"Unrecognized driver: {desired_driver}")  # noqa: TRY003
 
         self.driver.get("https://www.gta5-mods.com")
 

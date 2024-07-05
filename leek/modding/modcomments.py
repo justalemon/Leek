@@ -2,6 +2,8 @@
 Cog for parsing comments from 5mods mod pages and sending them to channels.
 """
 
+from __future__ import annotations
+
 import os
 
 from discord import ApplicationContext, Cog

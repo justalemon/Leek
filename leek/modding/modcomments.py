@@ -43,6 +43,20 @@ SQL_CREATE = """CREATE TABLE IF NOT EXISTS mods (
 SQL_FETCH = "SELECT * FROM mods"
 
 
+async def _send_message_to(channel: TextChannel, element: WebElement, title: str, url: str) -> None:
+    text = element.find_element(By.XPATH, XPATH_COMMENT_TEXT).get_attribute("innerText")
+    author = element.find_element(By.XPATH, XPATH_COMMENT_AUTHOR).get_attribute("href").split("/")[-1]
+    comment_id = element.get_attribute("data-comment-id")
+    image_url = element.find_element(By.XPATH, XPATH_COMMENT_IMAGE).get_attribute("src")
+
+    embed = Embed(color=0x20ba4e, description=text,
+                  author=EmbedAuthor(f"New comment in {title} by {author}", f"{url}#comment-{comment_id}"))
+    embed.set_thumbnail(url=image_url)
+    embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
+
+    await channel.send(embed=embed)
+
+
 class ModComments(Cog):
     """
     Comment parser an redirector for 5mods.

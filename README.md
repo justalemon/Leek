@@ -38,6 +38,7 @@ Leek allows you to configure your bot just by using environment variables via th
 
 * DISCORD_TOKEN: The Discord Bot Token (required)
 * DISCORD_DEBUG: Whether Debug features are enabled or not (optional, set it to anything other than zero to enable)
+* DISCORD_GUILDS: The guilds that will be set to Debug mode (optional, comas separated guild ids)
 * DISCORD_COGS: The Cogs to load by default (optional, separated by comas in the format `library.path:Class`)
 * SQL_HOST: The host for the SQL connection (optional, defaults to `127.0.0.1`)
 * SQL_PORT: The port for the SQL connection (optional, defaults to `3306`)

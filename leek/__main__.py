@@ -62,9 +62,15 @@ def main() -> None:
         LOGGER.error("Discord Token is not set")
         sys.exit(2)
 
+    debug_guilds = [int(x) for x in os.environ.get("DISCORD_GUILDS", "").split(",")]
+
+    if debug_guilds:
+        LOGGER.info("Found Guilds in debug mode: %s", debug_guilds)
+
     bot = LeekBot(debug=os.environ.get("DISCORD_DEBUG", "0") != "0",
                   pool_info=_get_sql_connection(),
-                  intents=Intents.all())
+                  intents=Intents.all(),
+                  debug_guilds=debug_guilds)
 
     cogs_to_load = os.environ.get("DISCORD_COGS", "").split(",")
 

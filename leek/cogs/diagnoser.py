@@ -138,11 +138,14 @@ class Diagnoser(Cog):
             lines = content.splitlines()
 
         warnings, errors = get_problems(ctx.locale, lines)
+        embed = Embed()
 
         if warnings or errors:
-            embed = Embed()
+            embed.colour = 0xff1100 if errors else 0xffe100
             embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(warnings), len(errors))
             embed.description = "\n\n".join(("\n".join(errors), "\n".join(warnings)))
-            await ctx.respond(embed=embed)
         else:
-            await ctx.respond(l("MESSAGE_DIAGNOSE_NOTHING", ctx.locale))
+            embed.colour = 0x6fff00
+            embed.title = l("MESSAGE_DIAGNOSE_NOTHING", ctx.locale)
+
+        await ctx.respond(embed=embed)

@@ -14,7 +14,7 @@ WORKDIR /dist
 COPY --from=build src/dist /dist
 RUN <<EOF
 python -m pip install -U pip
-python -m pip install --find-links /dist/ leek
+python -m pip install --find-links /dist/ leekbot
 rm -fr /dist
 EOF
 

@@ -6,17 +6,7 @@ import os
 import re
 from typing import TYPE_CHECKING
 
-from discord import (
-    ApplicationContext,
-    Cog,
-    Embed,
-    EmbedAuthor,
-    Permissions,
-    SlashCommandOptionType,
-    TextChannel,
-    option,
-    slash_command,
-)
+import discord
 from discord.ext import tasks
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -34,7 +24,7 @@ from leek import DatabaseRequiredError, LeekBot, d, l, la
 if TYPE_CHECKING:
     from aiomysql import Cursor
 
-PERMISSIONS = Permissions(manage_messages=True)
+PERMISSIONS = discord.Permissions(manage_messages=True)
 COLOR = 0x20ba4e
 RE_LINK = re.compile("https://www.gta5-mods.com/(tools|vehicles|paintjobs|weapons|scripts|player|maps|misc)"
                      "/([a-z0-9\\-]+)")
@@ -59,25 +49,27 @@ SQL_FETCH_GUILD = "SELECT id, type, slug, channel FROM mods WHERE guild = %s"
 SQL_INSERT = "INSERT INTO mods (type, slug, guild, channel) VALUES (%s, %s, %s, %s)"
 
 
-async def _send_message_to(channel: TextChannel, element: WebElement, title: str, url: str) -> None:
+async def _send_message_to(channel: discord.TextChannel, element: WebElement, title: str, url: str) -> None:
     text = element.find_element(By.XPATH, XPATH_COMMENT_TEXT).get_attribute("innerText")
     author = element.find_element(By.XPATH, XPATH_COMMENT_AUTHOR).get_attribute("href").split("/")[-1]
     comment_id = element.get_attribute("data-comment-id")
     image_url = element.find_element(By.XPATH, XPATH_COMMENT_IMAGE).get_attribute("src")
 
-    embed = Embed(color=COLOR, description=text,
-                  author=EmbedAuthor(l("MODCOMMENTS_TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
-                                     f"{url}#comment-{comment_id}"))
+    embed = discord.Embed(color=COLOR, description=text,
+                          author=discord.EmbedAuthor(
+                              l("MODCOMMENTS_TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
+                              f"{url}#comment-{comment_id}"))
     embed.set_thumbnail(url=image_url)
     embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
 
     await channel.send(embed=embed)
 
 
-class ModComments(Cog):
+class ModComments(discord.Cog):
     """
     Comment parser and redirector for 5mods.
     """
+
     def __init__(self, bot: LeekBot):
         """
         Creates a new Cog.
@@ -108,7 +100,7 @@ class ModComments(Cog):
             await cursor.execute("UPDATE mods SET last = %s WHERE id = %s", (latest, entry_id))
             await connection.commit()
 
-    async def cog_before_invoke(self, ctx: ApplicationContext) -> None:  # noqa: ARG002
+    async def cog_before_invoke(self, ctx: discord.ApplicationContext) -> None:  # noqa: ARG002
         """
         Checks whether the database is available before executing a command.
         """
@@ -130,7 +122,7 @@ class ModComments(Cog):
             identifier, mod_type, mod_slug, guild_id, channel_id, last_comment = entry
 
             url = f"https://www.gta5-mods.com/{mod_type}/{mod_slug}"
-            channel: TextChannel = self.bot.get_channel(channel_id)
+            channel: discord.TextChannel = self.bot.get_channel(channel_id)
 
             if channel is None:
                 continue
@@ -171,7 +163,7 @@ class ModComments(Cog):
                     await _send_message_to(channel, element, mod_name, url)
                     await self._update(identifier, comment_id)
 
-    @Cog.listener()
+    @discord.Cog.listener()
     async def on_ready(self) -> None:
         """
         Function triggered when the bot is ready.
@@ -184,12 +176,12 @@ class ModComments(Cog):
 
             self.check_for_comments.start()
 
-    @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_NAME"),
+    @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_NAME"),
                    description=d("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
                    description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
                    default_member_permissions=PERMISSIONS)
-    @option("url", type=SlashCommandOptionType.string)
-    async def addmod(self, ctx: ApplicationContext, url: str) -> None:
+    @discord.option("url", type=discord.SlashCommandOptionType.string)
+    async def addmod(self, ctx: discord.ApplicationContext, url: str) -> None:
         """
         Command used to add mod comments to the channel.
         """
@@ -218,11 +210,11 @@ class ModComments(Cog):
 
         await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_DONE", ctx.locale, mod_type, mod_id, last))
 
-    @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
+    @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
                    description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
                    description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
                    default_member_permissions=PERMISSIONS)
-    async def listmods(self, ctx: ApplicationContext) -> None:
+    async def listmods(self, ctx: discord.ApplicationContext) -> None:
         """
         Command that lists the registered mods.
         """
@@ -237,5 +229,5 @@ class ModComments(Cog):
 
         desc = "\n".join(f"{x[0]}: https://www.gta5-mods.com/{x[1]}/{x[2]} @ <#{x[3]}>" for x in checks)
 
-        embed = Embed(color=COLOR, description=desc)
+        embed = discord.Embed(color=COLOR, description=desc)
         await ctx.respond(embed=embed)

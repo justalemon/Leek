@@ -122,7 +122,7 @@ class ModComments(Cog):
             await connection.commit()
 
         for entry in checks:
-            identifier, mod_type, mod_slug, channel_id, last_comment = entry
+            identifier, mod_type, mod_slug, guild_id, channel_id, last_comment = entry
 
             url = f"https://www.gta5-mods.com/{mod_type}/{mod_slug}"
             channel: TextChannel = self.bot.get_channel(channel_id)

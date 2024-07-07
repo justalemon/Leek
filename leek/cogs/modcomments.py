@@ -50,7 +50,7 @@ async def _send_message_to(channel: discord.TextChannel, element: ElementHandle,
 
     embed = discord.Embed(color=COLOR, description=text,
                           author=discord.EmbedAuthor(
-                              l("MODCOMMENTS_TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
+                              l("TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
                               f"{url}#comment-{comment_id}"))
     embed.set_thumbnail(url=image_url.replace(" ", "%20"))
     embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
@@ -169,9 +169,9 @@ class ModComments(discord.Cog):
 
             self.check_for_comments.start()
 
-    @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_NAME"),
-                           description=d("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
-                           description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
+    @discord.slash_command(name_localizations=la("COMMAND_ADDMOD_NAME"),
+                           description=d("COMMAND_ADDMOD_DESC"),
+                           description_localizations=la("COMMAND_ADDMOD_DESC"),
                            default_member_permissions=PERMISSIONS)
     @discord.option("url", type=discord.SlashCommandOptionType.string)
     async def addmod(self, ctx: discord.ApplicationContext, url: str) -> None:
@@ -181,7 +181,7 @@ class ModComments(discord.Cog):
         match = RE_LINK.fullmatch(url)
 
         if match is None:
-            await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_INVALID", ctx.locale))
+            await ctx.respond(l("COMMAND_ADDMOD_INVALID", ctx.locale))
             return
 
         mod_type, mod_id = match.groups()
@@ -192,7 +192,7 @@ class ModComments(discord.Cog):
             found = await cursor.fetchone()
 
             if found:
-                await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_EXISTS", ctx.locale, found[0]))
+                await ctx.respond(l("COMMAND_ADDMOD_EXISTS", ctx.locale, found[0]))
                 return
 
         async with self.bot.connection as connection, await connection.cursor() as cursor:
@@ -201,11 +201,11 @@ class ModComments(discord.Cog):
             await connection.commit()
             last = cursor.lastrowid
 
-        await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_DONE", ctx.locale, mod_type, mod_id, last))
+        await ctx.respond(l("COMMAND_ADDMOD_DONE", ctx.locale, mod_type, mod_id, last))
 
-    @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
-                           description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
-                           description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
+    @discord.slash_command(name_localizations=la("COMMAND_LISTMODS_NAME"),
+                           description=d("COMMAND_LISTMODS_DESC"),
+                           description_localizations=la("COMMAND_LISTMODS_DESC"),
                            default_member_permissions=PERMISSIONS)
     async def listmods(self, ctx: discord.ApplicationContext) -> None:
         """
@@ -217,7 +217,7 @@ class ModComments(discord.Cog):
             checks = await cursor.fetchall()
 
         if not checks:
-            await ctx.respond(l("MODCOMMENTS_COMMAND_LISTMODS_NONE", ctx.locale))
+            await ctx.respond(l("COMMAND_LISTMODS_NONE", ctx.locale))
             return
 
         desc = "\n".join(f"{x[0]}: https://www.gta5-mods.com/{x[1]}/{x[2]} @ <#{x[3]}>" for x in checks)
@@ -225,9 +225,9 @@ class ModComments(discord.Cog):
         embed = discord.Embed(color=COLOR, description=desc)
         await ctx.respond(embed=embed)
 
-    @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_DELETEMOD_NAME"),
-                           description=d("MODCOMMENTS_COMMAND_DELETEMOD_DESC"),
-                           description_localizations=la("MODCOMMENTS_COMMAND_DELETEMOD_DESC"),
+    @discord.slash_command(name_localizations=la("COMMAND_DELETEMOD_NAME"),
+                           description=d("COMMAND_DELETEMOD_DESC"),
+                           description_localizations=la("COMMAND_DELETEMOD_DESC"),
                            default_member_permissions=PERMISSIONS)
     async def deletemod(self, ctx: discord.ApplicationContext, mod_id: int) -> None:
         """
@@ -239,6 +239,6 @@ class ModComments(discord.Cog):
             await connection.commit()
 
             if connection.affected_rows() > 0:
-                await ctx.respond(l("MODCOMMENTS_COMMAND_DELETEMOD_DONE", ctx.locale))
+                await ctx.respond(l("COMMAND_DELETEMOD_DONE", ctx.locale))
             else:
-                await ctx.respond(l("MODCOMMENTS_COMMAND_DELETEMOD_INVALID", ctx.locale))
+                await ctx.respond(l("COMMAND_DELETEMOD_INVALID", ctx.locale))

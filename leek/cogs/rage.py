@@ -132,9 +132,9 @@ class Rage(Cog):
 
         LOGGER.info("Finished fetching the natives")
 
-    @slash_command(name_localizations=la("MODDING_COMMAND_NATIVE_NAME"),
-                   description=d("MODDING_COMMAND_NATIVE_DESC"),
-                   description_localizations=la("MODDING_COMMAND_NATIVE_DESC"))
+    @slash_command(name_localizations=la("COMMAND_NATIVE_NAME"),
+                   description=d("COMMAND_NATIVE_DESC"),
+                   description_localizations=la("COMMAND_NATIVE_DESC"))
     async def native(self, ctx: ApplicationContext, name: Option(str, "The name to search", autocomplete=get_natives),
                      game: Option(str, "The game for this native", default="gtav",
                                   autocomplete=get_games)) -> None:

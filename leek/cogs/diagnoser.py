@@ -92,7 +92,7 @@ class Diagnoser(Cog):
         """
         self.bot = bot
 
-    @message_command(name=d("MODDING_MESSAGE_DIAGNOSE_NAME"))
+    @message_command(name=d("MESSAGE_DIAGNOSE_NAME"))
     async def diagnose(self, ctx: ApplicationContext, message: Message) -> None:
         """
         Tries to make a partial diagnostic of a SHVDN Log File.

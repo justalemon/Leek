@@ -60,9 +60,9 @@ class Tags(Cog):
         if not self.bot.is_pool_available:
             raise DatabaseRequiredError(self)
 
-    @slash_command(name_localizations=la("TAGS_COMMAND_TAG_NAME"),
-                   description=d("TAGS_COMMAND_TAG_DESC"),
-                   description_localization=la("TAGS_COMMAND_TAG_DESC"))
+    @slash_command(name_localizations=la("COMMAND_TAG_NAME"),
+                   description=d("COMMAND_TAG_DESC"),
+                   description_localization=la("COMMAND_TAG_DESC"))
     async def tag(self, ctx: ApplicationContext, name: Option(str, "The tag name", autocomplete=get_tag_names)) -> None:
         """
         Gets a specific tag.
@@ -76,13 +76,13 @@ class Tags(Cog):
             await cursor.close()
 
         if tag is None:
-            await ctx.respond(l("TAGS_NOT_FOUND", ctx.locale, name), ephemeral=True)
+            await ctx.respond(l("NOT_FOUND", ctx.locale, name), ephemeral=True)
         else:
             await ctx.respond(tag[0])
 
-    @slash_command(name_localizations=la("TAGS_COMMAND_CREATETAG_NAME"),
-                   description=d("TAGS_COMMAND_CREATETAG_DESC"),
-                   description_localization=la("TAGS_COMMAND_CREATETAG_DESC"),
+    @slash_command(name_localizations=la("COMMAND_CREATETAG_NAME"),
+                   description=d("COMMAND_CREATETAG_DESC"),
+                   description_localization=la("COMMAND_CREATETAG_DESC"),
                    default_member_permissions=PERMISSIONS)
     async def createtag(self, ctx: ApplicationContext, name: Option(str, "The tag name"),
                         content: Option(str, "The text content of the tag")) -> None:
@@ -96,13 +96,13 @@ class Tags(Cog):
                 await cursor.execute(ADD, [ctx.interaction.guild.id, name, content])
                 await connection.commit()
                 await cursor.close()
-                await ctx.respond(l("TAGS_ADD_OKAY", ctx.locale, name), ephemeral=True)
+                await ctx.respond(l("ADD_OKAY", ctx.locale, name), ephemeral=True)
         except IntegrityError:
-            await ctx.respond(l("TAGS_ADD_DUPE", ctx.locale, name), ephemeral=True)
+            await ctx.respond(l("ADD_DUPE", ctx.locale, name), ephemeral=True)
 
-    @slash_command(name_localizations=la("TAGS_COMMAND_DELETETAG_NAME"),
-                   description=d("TAGS_COMMAND_DELETETAG_DESC"),
-                   description_localization=la("TAGS_COMMAND_DELETETAG_DESC"),
+    @slash_command(name_localizations=la("COMMAND_DELETETAG_NAME"),
+                   description=d("COMMAND_DELETETAG_DESC"),
+                   description_localization=la("COMMAND_DELETETAG_DESC"),
                    default_member_permissions=PERMISSIONS)
     async def deletetag(self, ctx: ApplicationContext, name: Option(str, "The tag name",
                                                                     autocomplete=get_tag_names)) -> None:
@@ -118,6 +118,6 @@ class Tags(Cog):
             await cursor.close()
 
         if rows == 0:
-            await ctx.respond(l("TAGS_NOT_FOUND", ctx.locale, name), ephemeral=True)
+            await ctx.respond(l("NOT_FOUND", ctx.locale, name), ephemeral=True)
         else:
-            await ctx.respond(l("TAGS_DELETE_OKAY", ctx.locale, name), ephemeral=True)
+            await ctx.respond(l("DELETE_OKAY", ctx.locale, name), ephemeral=True)

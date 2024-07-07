@@ -29,33 +29,33 @@ class Moderation(Cog):
         try:
             await message.delete(reason=f"Clear by {ctx.user} ({ctx.user})")
         except Forbidden:
-            await ctx.send(l("MODERATION_COMMAND_CLEAR_NO_PERMS", ctx.locale))
+            await ctx.send(l("COMMAND_CLEAR_NO_PERMS", ctx.locale))
             return False
         except NotFound:
             return True
         except HTTPException as e:
             if e.code != 429:
-                await ctx.send(l("MODERATION_COMMAND_CLEAR_HTTP_ERROR", ctx.locale, e.code))
+                await ctx.send(l("COMMAND_CLEAR_HTTP_ERROR", ctx.locale, e.code))
                 return False
 
             response = await e.response.json()
             retry = response["retry_after"]
 
             if response["global"]:
-                await ctx.send(l("MODERATION_COMMAND_CLEAR_LIMIT_GLOBAL", ctx.locale, retry))
+                await ctx.send(l("COMMAND_CLEAR_LIMIT_GLOBAL", ctx.locale, retry))
                 return False
 
-            await ctx.send(l("MODERATION_COMMAND_CLEAR_LIMIT_LOCAL", ctx.locale, retry),
+            await ctx.send(l("COMMAND_CLEAR_LIMIT_LOCAL", ctx.locale, retry),
                            delete_after=10)
             await asyncio.sleep(retry + 1)
             return await self._safely_delete(ctx, message)
         else:
             return True
 
-    @slash_command(name=d("MODERATION_COMMAND_CLEAR_NAME"),
-                   name_localizations=la("MODERATION_COMMAND_CLEAR_NAME"),
-                   description=d("MODERATION_COMMAND_CLEAR_HELP"),
-                   description_localizations=la("MODERATION_COMMAND_CLEAR_HELP"),
+    @slash_command(name=d("COMMAND_CLEAR_NAME"),
+                   name_localizations=la("COMMAND_CLEAR_NAME"),
+                   description=d("COMMAND_CLEAR_HELP"),
+                   description_localizations=la("COMMAND_CLEAR_HELP"),
                    default_member_permissions=PERMISSIONS)
     async def clear(self, ctx: ApplicationContext, keep: Optional[str]) -> None:
         """
@@ -67,7 +67,7 @@ class Moderation(Cog):
             try:
                 keep_id = int(keep)
             except ValueError:
-                await ctx.respond(l("MODERATION_COMMAND_CLEAR_INVALID", ctx.locale, keep), ephemeral=True)
+                await ctx.respond(l("COMMAND_CLEAR_INVALID", ctx.locale, keep), ephemeral=True)
                 return
         else:
             keep_id = 0
@@ -82,4 +82,4 @@ class Moderation(Cog):
                 continue
             await self._safely_delete(ctx, message)
 
-        await ctx.followup.send(l("MODERATION_COMMAND_CLEAR_DONE", ctx.locale), ephemeral=True)
+        await ctx.followup.send(l("COMMAND_CLEAR_DONE", ctx.locale), ephemeral=True)

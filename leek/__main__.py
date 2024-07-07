@@ -108,7 +108,7 @@ def main() -> None:
             bot.add_cog(cog(bot))
         except Exception:
             # We catch everything because we don't know what exception might be triggered
-            LOGGER.exception("Unable to start '%s'", name)
+            LOGGER.exception("Unable to add cog '%s'", name)
         finally:
             LOGGER.info("Successfully added cog %s", name)
 

@@ -1,6 +1,11 @@
 {
+    "MODCOMMENTS_TASK_CHECK_NEW": "New comment in {0} by {1}",
+    
     "MODCOMMENTS_COMMAND_ADDMOD_NAME": "addmod",
     "MODCOMMENTS_COMMAND_ADDMOD_DESC": "Links a mod in 5mods to receive comments in this channel.",
+    "MODCOMMENTS_COMMAND_ADDMOD_INVALID": "The URL does not appears to be valid, please check the link and try again.",
+    "MODCOMMENTS_COMMAND_ADDMOD_EXISTS": "This mod is already registered to <#{0}> in the server.",
+    "MODCOMMENTS_COMMAND_ADDMOD_DONE": "Added https://www.gta5-mods.com/{0}/{1} with ID {2}",
     
     "MODCOMMENTS_COMMAND_LISTMODS_NAME": "listmods",
     "MODCOMMENTS_COMMAND_LISTMODS_DESC": "Lists all of the mods from 5mods registered in this server.",

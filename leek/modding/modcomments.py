@@ -64,7 +64,8 @@ async def _send_message_to(channel: TextChannel, element: WebElement, title: str
     image_url = element.find_element(By.XPATH, XPATH_COMMENT_IMAGE).get_attribute("src")
 
     embed = Embed(color=COLOR, description=text,
-                  author=EmbedAuthor(f"New comment in {title} by {author}", f"{url}#comment-{comment_id}"))
+                  author=EmbedAuthor(l("MODCOMMENTS_TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
+                                     f"{url}#comment-{comment_id}"))
     embed.set_thumbnail(url=image_url)
     embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
 
@@ -192,7 +193,7 @@ class ModComments(Cog):
         match = RE_LINK.fullmatch(url)
 
         if match is None:
-            await ctx.respond("The URL does not appears to be valid, please check the link and try again.")
+            await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_INVALID", ctx.locale))
             return
 
         mod_type, mod_id = match.groups()
@@ -203,8 +204,7 @@ class ModComments(Cog):
             found = await cursor.fetchone()
 
             if found:
-                channel = found[0]
-                await ctx.respond(f"This mod is already registered to <#{channel}> in the server.")
+                await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_EXISTS", ctx.locale, found[0]))
                 return
 
         async with self.bot.connection as connection, await connection.cursor() as cursor:
@@ -213,7 +213,7 @@ class ModComments(Cog):
             await connection.commit()
             last = cursor.lastrowid
 
-        await ctx.respond(f"Added https://www.gta5-mods.com/{mod_type}/{mod_id} with ID {last}")
+        await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_DONE", ctx.locale, mod_type, mod_id, last))
 
     @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
                    description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),

@@ -177,9 +177,9 @@ class ModComments(discord.Cog):
             self.check_for_comments.start()
 
     @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_NAME"),
-                   description=d("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
-                   description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
-                   default_member_permissions=PERMISSIONS)
+                           description=d("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
+                           description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
+                           default_member_permissions=PERMISSIONS)
     @discord.option("url", type=discord.SlashCommandOptionType.string)
     async def addmod(self, ctx: discord.ApplicationContext, url: str) -> None:
         """
@@ -211,9 +211,9 @@ class ModComments(discord.Cog):
         await ctx.respond(l("MODCOMMENTS_COMMAND_ADDMOD_DONE", ctx.locale, mod_type, mod_id, last))
 
     @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
-                   description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
-                   description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
-                   default_member_permissions=PERMISSIONS)
+                           description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
+                           description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
+                           default_member_permissions=PERMISSIONS)
     async def listmods(self, ctx: discord.ApplicationContext) -> None:
         """
         Command that lists the registered mods.

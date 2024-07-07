@@ -28,6 +28,7 @@ MATCHES = {
     RE_CONSTRUCTOR: "MESSAGE_DIAGNOSE_MATCH_CONSTRUCTOR_MISSING",
     RE_CRASHED: "MESSAGE_DIAGNOSE_MATCH_CRASHED",
 }
+VER_TWO_WARNING = "script(s) resolved to the deprecated API version 2.x (ScriptHookVDotNet2.dll)"
 LEVELS = {
     "WARNING": "🟡",
     "ERROR": "🔴"
@@ -45,13 +46,28 @@ def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901
     """
     problems = []
 
+    is_processing_ver_two_warning = False
+
     for line in lines:
         match = RE_SHVDN.search(line)
 
+        # deprecation warnings tend to be followed by "[DEBUG] Instantiating script"
+        # this should cleanly not trigger any matches and set the variable to false
+
         if match is None:
+            is_processing_ver_two_warning = False
             continue
 
         level, details = match.groups()
+
+        if is_processing_ver_two_warning:
+            message = LEVELS["WARNING"] + " " + l("MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO", locale, details)
+            problems.append(message)
+            continue
+
+        if VER_TWO_WARNING in details:
+            is_processing_ver_two_warning = True
+            continue
 
         if level not in LEVELS or details in FATAL_EXCEPTIONS or details.startswith(ABORTED_SCRIPT):
             continue

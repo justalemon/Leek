@@ -7,6 +7,7 @@
     
     "MESSAGE_DIAGNOSE_MATCH_MISSING_CONFIG": "The configuration file for SHVDN does not exists",
     "MESSAGE_DIAGNOSE_MATCH_LEGACY_ZERO": "Mod {0} does not references a version for SHVDN, will use outdated SHVDN2, ask the mod developer to update the mod",
+    "MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO": "Mod {0} is using SHVDN2, which is outdated, ask the mod developer to update the mod",
     "MESSAGE_DIAGNOSE_MATCH_INSTANCE_INVALID": "Mod {0} was not instantiated by SHVDN",
     "MESSAGE_DIAGNOSE_MATCH_DEPENDENCY_MISSING": "{0} requires {1} version {2} or higher but is not installed",
     "MESSAGE_DIAGNOSE_MATCH_ASSEMBLY_MISSING": "{0} requires {1} version {2} or higher but is not installed",

@@ -11,6 +11,7 @@ from discord import (
     Cog,
     Embed,
     EmbedAuthor,
+    Permissions,
     SlashCommandOptionType,
     TextChannel,
     option,
@@ -33,6 +34,7 @@ from leek import DatabaseRequiredError, LeekBot, d, l, la
 if TYPE_CHECKING:
     from aiomysql import Cursor
 
+PERMISSIONS = Permissions(manage_messages=True)
 COLOR = 0x20ba4e
 RE_LINK = re.compile("https://www.gta5-mods.com/(tools|vehicles|paintjobs|weapons|scripts|player|maps|misc)"
                      "/([a-z0-9\\-]+)")
@@ -184,7 +186,8 @@ class ModComments(Cog):
 
     @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_NAME"),
                    description=d("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
-                   description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"))
+                   description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
+                   default_member_permissions=PERMISSIONS)
     @option("url", type=SlashCommandOptionType.string)
     async def addmod(self, ctx: ApplicationContext, url: str) -> None:
         """
@@ -217,7 +220,8 @@ class ModComments(Cog):
 
     @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
                    description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
-                   description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"))
+                   description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
+                   default_member_permissions=PERMISSIONS)
     async def listmods(self, ctx: ApplicationContext) -> None:
         """
         Command that lists the registered mods.

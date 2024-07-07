@@ -4,20 +4,12 @@ Cog for parsing comments from 5mods mod pages and sending them to channels.
 
 import os
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import discord
 from discord.ext import tasks
-from selenium import webdriver
-from selenium.common import NoSuchElementException
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.remote.webelement import WebElement
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
+from playwright.async_api import Browser, ElementHandle, Page, Playwright, async_playwright
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 from leek import DatabaseRequiredError, LeekBot, d, l, la
 
@@ -31,9 +23,9 @@ RE_LINK = re.compile("https://www.gta5-mods.com/(tools|vehicles|paintjobs|weapon
 XPATH_ERROR = "//div[@class='dialog container']/div/h1"
 XPATH_COMMENTS = "//li[@class='comment media ']"
 XPATH_MOD_TITLE = "//div[@class='clearfix']/h1"
-XPATH_COMMENT_TEXT = ".//div[@class='comment-text ']/p"
-XPATH_COMMENT_AUTHOR = ".//div[@class='pull-left flip']/a"
-XPATH_COMMENT_IMAGE = ".//img[@class='media-object']"
+XPATH_COMMENT_TEXT = "xpath=.//div[@class='comment-text ']/p"
+XPATH_COMMENT_AUTHOR = "xpath=.//div[@class='pull-left flip']/a"
+XPATH_COMMENT_IMAGE = "xpath=.//img[@class='media-object']"
 SQL_CREATE = """CREATE TABLE IF NOT EXISTS mods (
     id INT NOT NULL AUTO_INCREMENT,
     type TEXT NOT NULL,
@@ -50,17 +42,17 @@ SQL_INSERT = "INSERT INTO mods (type, slug, guild, channel) VALUES (%s, %s, %s, 
 SQL_DELETE = "DELETE FROM mods WHERE id = %s AND guild = %s"
 
 
-async def _send_message_to(channel: discord.TextChannel, element: WebElement, title: str, url: str) -> None:
-    text = element.find_element(By.XPATH, XPATH_COMMENT_TEXT).get_attribute("innerText")
-    author = element.find_element(By.XPATH, XPATH_COMMENT_AUTHOR).get_attribute("href").split("/")[-1]
-    comment_id = element.get_attribute("data-comment-id")
-    image_url = element.find_element(By.XPATH, XPATH_COMMENT_IMAGE).get_attribute("src")
+async def _send_message_to(channel: discord.TextChannel, element: ElementHandle, title: str, url: str) -> None:
+    text = await (await element.query_selector(XPATH_COMMENT_TEXT)).inner_text()
+    author = (await (await element.query_selector(XPATH_COMMENT_AUTHOR)).get_attribute("href")).split("/")[-1]
+    comment_id = await element.get_attribute("data-comment-id")
+    # image_url = await (await element.query_selector(XPATH_COMMENT_IMAGE)).get_attribute("src")  # noqa: ERA001
 
     embed = discord.Embed(color=COLOR, description=text,
                           author=discord.EmbedAuthor(
                               l("MODCOMMENTS_TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
                               f"{url}#comment-{comment_id}"))
-    embed.set_thumbnail(url=image_url)
+    # embed.set_thumbnail(url=image_url)  # noqa: ERA001
     embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
 
     await channel.send(embed=embed)
@@ -75,23 +67,9 @@ class ModComments(discord.Cog):
         """
         Creates a new Cog.
         """
-        desired_driver = os.environ.get("MODCOMMENTS_DRIVER", "firefox").lower()
-        headless = bool(int(os.environ.get("MODCOMMENTS_HEADLESS", 1)))
-
-        if desired_driver == "firefox":
-            options = FirefoxOptions()
-            if headless:
-                options.add_argument("--headless")
-            self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
-        elif desired_driver == "chrome":
-            options = ChromeOptions()
-            if headless:
-                options.add_argument("--headless=new")
-            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-        else:
-            raise ValueError(f"Unrecognized driver: {desired_driver}")  # noqa: TRY003
-
-        self.driver.get("https://www.gta5-mods.com")
+        self.pw: Optional[Playwright] = None
+        self.browser: Optional[Browser] = None
+        self.page: Optional[Page] = None
 
         self.bot: LeekBot = bot
 
@@ -128,25 +106,24 @@ class ModComments(discord.Cog):
             if channel is None:
                 continue
 
-            self.driver.get(url)
+            await self.page.goto(url)
 
             try:
-                message = self.driver.find_element(By.XPATH, XPATH_ERROR)
-
-                if message.text == "The page you were looking for doesn't exist.":
+                message = await self.page.locator(XPATH_ERROR).inner_text(timeout=1000)
+                if message == "The page you were looking for doesn't exist.":
                     continue
-            except NoSuchElementException:
+            except PlaywrightTimeoutError:
                 pass
 
-            mod_name = self.driver.find_element(By.XPATH, XPATH_MOD_TITLE).text
-            elements = self.driver.find_elements(By.XPATH, XPATH_COMMENTS)
+            mod_name = await self.page.locator(XPATH_MOD_TITLE).inner_text()
+            elements = await self.page.locator(XPATH_COMMENTS).element_handles()
 
             if not elements:
                 continue
 
             if last_comment == 0:
                 element = elements[-1]
-                comment_id = int(element.get_attribute("data-comment-id"))
+                comment_id = int(await element.get_attribute("data-comment-id"))
                 await _send_message_to(channel, element, mod_name, url)
                 await self._update(identifier, comment_id)
                 continue
@@ -154,7 +131,7 @@ class ModComments(discord.Cog):
             send = False
 
             for element in elements:
-                comment_id = int(element.get_attribute("data-comment-id"))
+                comment_id = int(await element.get_attribute("data-comment-id"))
 
                 if last_comment == comment_id:
                     send = True
@@ -169,6 +146,21 @@ class ModComments(discord.Cog):
         """
         Function triggered when the bot is ready.
         """
+        desired_driver = os.environ.get("MODCOMMENTS_DRIVER", "firefox").lower()
+        headless = bool(int(os.environ.get("MODCOMMENTS_HEADLESS", 1)))
+
+        self.pw = await async_playwright().start()
+
+        if desired_driver == "firefox":
+            self.browser = await self.pw.firefox.launch(headless=headless)
+        elif desired_driver == "chrome":
+            self.browser = await self.pw.chromium.launch(headless=headless)
+        else:
+            raise ValueError(f"Unrecognized driver: {desired_driver}")  # noqa: TRY003
+
+        self.page = await self.browser.new_page()
+        await self.page.goto("https://www.gta5-mods.com")
+
         if self.bot.is_pool_available:
             async with self.bot.connection as connection, await connection.cursor() as cursor:
                 cursor: Cursor

@@ -47,6 +47,7 @@ SQL_FETCH_ALL = "SELECT * FROM mods"
 SQL_FETCH_ONE = "SELECT channel FROM mods WHERE type = %s AND slug = %s AND guild = %s"
 SQL_FETCH_GUILD = "SELECT id, type, slug, channel FROM mods WHERE guild = %s"
 SQL_INSERT = "INSERT INTO mods (type, slug, guild, channel) VALUES (%s, %s, %s, %s)"
+SQL_DELETE = "DELETE FROM mods WHERE id = %s AND guild = %s"
 
 
 async def _send_message_to(channel: discord.TextChannel, element: WebElement, title: str, url: str) -> None:
@@ -231,3 +232,21 @@ class ModComments(discord.Cog):
 
         embed = discord.Embed(color=COLOR, description=desc)
         await ctx.respond(embed=embed)
+
+    @discord.slash_command(name_localizations=la("MODCOMMENTS_COMMAND_DELETEMOD_NAME"),
+                           description=d("MODCOMMENTS_COMMAND_DELETEMOD_DESC"),
+                           description_localizations=la("MODCOMMENTS_COMMAND_DELETEMOD_DESC"),
+                           default_member_permissions=PERMISSIONS)
+    async def deletemod(self, ctx: discord.ApplicationContext, mod_id: int) -> None:
+        """
+        Deletes a registered mod.
+        """
+        async with self.bot.connection as connection, await connection.cursor() as cursor:
+            cursor: Cursor
+            await cursor.execute(SQL_DELETE, (mod_id, ctx.guild.id))
+            await connection.commit()
+
+            if connection.affected_rows() > 0:
+                await ctx.respond(l("MODCOMMENTS_COMMAND_DELETEMOD_DONE", ctx.locale))
+            else:
+                await ctx.respond(l("MODCOMMENTS_COMMAND_DELETEMOD_INVALID", ctx.locale))

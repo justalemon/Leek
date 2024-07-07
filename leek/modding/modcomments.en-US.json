@@ -9,5 +9,10 @@
     
     "MODCOMMENTS_COMMAND_LISTMODS_NAME": "listmods",
     "MODCOMMENTS_COMMAND_LISTMODS_DESC": "Lists all of the mods from 5mods registered in this server.",
-    "MODCOMMENTS_COMMAND_LISTMODS_NONE": "There are no mods registered in this server."
+    "MODCOMMENTS_COMMAND_LISTMODS_NONE": "There are no mods registered in this server.",
+
+    "MODCOMMENTS_COMMAND_DELETEMOD_NAME": "deletemod",
+    "MODCOMMENTS_COMMAND_DELETEMOD_DESC": "Deletes a specific mod-channel association.",
+    "MODCOMMENTS_COMMAND_DELETEMOD_DONE": "The mod has been successfully removed.",
+    "MODCOMMENTS_COMMAND_DELETEMOD_INVALID": "ID could not be found."
 }

@@ -14,7 +14,8 @@ WORKDIR /dist
 COPY --from=build src/dist /dist
 RUN <<EOF
 python -m pip install -U pip
-python -m pip install --find-links /dist/ leekbot
+python -m pip install --find-links /dist/ leekbot[extras]
+python -m playwright install
 rm -fr /dist
 EOF
 

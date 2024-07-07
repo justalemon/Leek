@@ -1,3 +1,14 @@
 {
-    "MESSAGE_DIAGNOSE_NAME": "Diagnose Log File"
+    "MESSAGE_DIAGNOSE_NAME": "Diagnose Log File",
+    "MESSAGE_DIAGNOSE_NOT_ATTACHED": "There are no log files attached to this message.",
+    "MESSAGE_DIAGNOSE_NOT_VALID": "The attachment is not a text file.",
+    "MESSAGE_DIAGNOSE_FAILED": "Couldn't fetch log file: Code {0}",
+    "MESSAGE_DIAGNOSE_NOTHING": "Couldn't detect any issues with the log file.",
+    
+    "MESSAGE_DIAGNOSE_MATCH_MISSING_CONFIG": "The configuration file for SHVDN does not exists",
+    "MESSAGE_DIAGNOSE_MATCH_INSTANCE_INVALID": "Mod {0} was not instantiated by SHVDN",
+    "MESSAGE_DIAGNOSE_MATCH_DEPENDENCY_MISSING": "{0} requires {1} version {2} or higher but is not installed",
+    "MESSAGE_DIAGNOSE_MATCH_ASSEMBLY_MISSING": "{0} requires {1} version {2} or higher but is not installed",
+    "MESSAGE_DIAGNOSE_MATCH_CONSTRUCTOR_MISSING": "Mod {0} is missing a constructor or the Attribute NoDefaultInstance",
+    "MESSAGE_DIAGNOSE_MATCH_CRASHED": "{0} crashed, contact the developer with this log file"
 }

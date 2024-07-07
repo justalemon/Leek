@@ -28,11 +28,12 @@ from selenium.webdriver.remote.webelement import WebElement
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
-from leek import DatabaseRequiredError, LeekBot, d, la
+from leek import DatabaseRequiredError, LeekBot, d, l, la
 
 if TYPE_CHECKING:
     from aiomysql import Cursor
 
+COLOR = 0x20ba4e
 RE_LINK = re.compile("https://www.gta5-mods.com/(tools|vehicles|paintjobs|weapons|scripts|player|maps|misc)"
                      "/([a-z0-9\\-]+)")
 XPATH_ERROR = "//div[@class='dialog container']/div/h1"
@@ -52,6 +53,7 @@ SQL_CREATE = """CREATE TABLE IF NOT EXISTS mods (
 )"""
 SQL_FETCH_ALL = "SELECT * FROM mods"
 SQL_FETCH_ONE = "SELECT channel FROM mods WHERE type = %s AND slug = %s AND guild = %s"
+SQL_FETCH_GUILD = "SELECT id, type, slug, channel FROM mods WHERE guild = %s"
 SQL_INSERT = "INSERT INTO mods (type, slug, guild, channel) VALUES (%s, %s, %s, %s)"
 
 
@@ -61,7 +63,7 @@ async def _send_message_to(channel: TextChannel, element: WebElement, title: str
     comment_id = element.get_attribute("data-comment-id")
     image_url = element.find_element(By.XPATH, XPATH_COMMENT_IMAGE).get_attribute("src")
 
-    embed = Embed(color=0x20ba4e, description=text,
+    embed = Embed(color=COLOR, description=text,
                   author=EmbedAuthor(f"New comment in {title} by {author}", f"{url}#comment-{comment_id}"))
     embed.set_thumbnail(url=image_url)
     embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
@@ -212,3 +214,24 @@ class ModComments(Cog):
             last = cursor.lastrowid
 
         await ctx.respond(f"Added https://www.gta5-mods.com/{mod_type}/{mod_id} with ID {last}")
+
+    @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_NAME"),
+                   description=d("MODCOMMENTS_COMMAND_LISTMODS_DESC"),
+                   description_localizations=la("MODCOMMENTS_COMMAND_LISTMODS_DESC"))
+    async def listmods(self, ctx: ApplicationContext) -> None:
+        """
+        Command that lists the registered mods.
+        """
+        async with self.bot.connection as connection, await connection.cursor() as cursor:
+            cursor: Cursor
+            await cursor.execute(SQL_FETCH_GUILD, ctx.guild.id)
+            checks = await cursor.fetchall()
+
+        if not checks:
+            await ctx.respond(l("MODCOMMENTS_COMMAND_LISTMODS_NONE", ctx.locale))
+            return
+
+        desc = "\n".join(f"{x[0]}: https://www.gta5-mods.com/{x[1]}/{x[2]} @ <#{x[3]}>" for x in checks)
+
+        embed = Embed(color=COLOR, description=desc)
+        await ctx.respond(embed=embed)

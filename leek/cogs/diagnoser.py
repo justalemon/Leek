@@ -30,7 +30,10 @@ LEVELS = {
     "WARNING": "🟡",
     "ERROR": "🔴"
 }
-FATAL_EXCEPTION = "Caught fatal unhandled exception:"
+FATAL_EXCEPTIONS = [
+    "Caught fatal unhandled exception:",
+    "Caught unhandled exception:"
+]
 ABORTED_SCRIPT = "Aborted script "
 
 
@@ -48,7 +51,7 @@ def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901
 
         level, details = match.groups()
 
-        if level not in LEVELS or details == FATAL_EXCEPTION or details.startswith(ABORTED_SCRIPT):
+        if level not in LEVELS or details in FATAL_EXCEPTIONS or details.startswith(ABORTED_SCRIPT):
             continue
 
         emoji = LEVELS[level]

@@ -9,6 +9,7 @@ from discord import ApplicationContext, Cog, Embed, Message, message_command
 from leek import LeekBot, d, l
 
 RE_SHVDN = re.compile("\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[(WARNING|ERROR)] (.*)")
+RE_LEGACY_ZERO = re.compile("Resolving API version 0.0.0 referenced in (.+\\.dll).")
 RE_INSTANCE = re.compile("A script tried to use a custom script instance of type ([A-Za-z0-9_.]*) that was not "
                          "instantiated by ScriptHookVDotNet")
 RE_DEPENDENCY = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because constructor threw an exception: "
@@ -20,6 +21,7 @@ RE_CONSTRUCTOR = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) becau
 RE_CRASHED = re.compile("The exception was thrown while executing the script ([A-Za-z0-9_.]*)")
 MATCHES = {
     "Failed to load config: System.IO.FileNotFoundException": "MESSAGE_DIAGNOSE_MATCH_MISSING_CONFIG",
+    RE_LEGACY_ZERO: "MESSAGE_DIAGNOSE_MATCH_LEGACY_ZERO",
     RE_INSTANCE: "MESSAGE_DIAGNOSE_MATCH_INSTANCE_INVALID",
     RE_DEPENDENCY: "MESSAGE_DIAGNOSE_MATCH_DEPENDENCY_MISSING",
     RE_ASSEMBLY: "MESSAGE_DIAGNOSE_MATCH_ASSEMBLY_MISSING",

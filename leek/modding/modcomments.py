@@ -193,11 +193,11 @@ class ModComments(Cog):
             await ctx.respond("The URL does not appears to be valid, please check the link and try again.")
             return
 
-        type, mod = match.groups()
+        mod_type, mod_id = match.groups()
 
         async with self.bot.connection as connection, await connection.cursor() as cursor:
             cursor: Cursor
-            await cursor.execute(SQL_FETCH_ONE, (type, mod, ctx.guild.id))
+            await cursor.execute(SQL_FETCH_ONE, (mod_type, mod_id, ctx.guild.id))
             found = await cursor.fetchone()
 
             if found:
@@ -207,8 +207,8 @@ class ModComments(Cog):
 
         async with self.bot.connection as connection, await connection.cursor() as cursor:
             cursor: Cursor
-            await cursor.execute(SQL_INSERT, (type, mod, ctx.guild.id, ctx.channel.id))
+            await cursor.execute(SQL_INSERT, (mod_type, mod_id, ctx.guild.id, ctx.channel.id))
             await connection.commit()
             last = cursor.lastrowid
 
-        await ctx.respond(f"Added https://www.gta5-mods.com/{type}/{mod} with ID {last}")
+        await ctx.respond(f"Added https://www.gta5-mods.com/{mod_type}/{mod_id} with ID {last}")

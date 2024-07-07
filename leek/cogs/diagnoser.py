@@ -40,7 +40,7 @@ FATAL_EXCEPTIONS = [
 ABORTED_SCRIPT = "Aborted script "
 
 
-def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901
+def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901, PLR0912
     """
     Gets the problems in the lines of a file.
     """

@@ -46,13 +46,13 @@ async def _send_message_to(channel: discord.TextChannel, element: ElementHandle,
     text = await (await element.query_selector(XPATH_COMMENT_TEXT)).inner_text()
     author = (await (await element.query_selector(XPATH_COMMENT_AUTHOR)).get_attribute("href")).split("/")[-1]
     comment_id = await element.get_attribute("data-comment-id")
-    # image_url = await (await element.query_selector(XPATH_COMMENT_IMAGE)).get_attribute("src")  # noqa: ERA001
+    image_url = await (await element.query_selector(XPATH_COMMENT_IMAGE)).get_attribute("src")
 
     embed = discord.Embed(color=COLOR, description=text,
                           author=discord.EmbedAuthor(
                               l("MODCOMMENTS_TASK_CHECK_NEW", channel.guild.preferred_locale, title, author),
                               f"{url}#comment-{comment_id}"))
-    # embed.set_thumbnail(url=image_url)  # noqa: ERA001
+    embed.set_thumbnail(url=image_url.replace(" ", "%20"))
     embed.set_footer(text="5mods", icon_url="https://images.gta5-mods.com/icons/favicon.png")
 
     await channel.send(embed=embed)

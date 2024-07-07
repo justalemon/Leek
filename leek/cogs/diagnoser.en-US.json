@@ -4,7 +4,9 @@
     "MESSAGE_DIAGNOSE_NOT_VALID": "The attachment is not a text file.",
     "MESSAGE_DIAGNOSE_FAILED": "Couldn't fetch log file: Code {0}",
     "MESSAGE_DIAGNOSE_NOTHING": "Couldn't detect any issues with the log file.",
-    
+    "MESSAGE_DIAGNOSE_FOUND": "Found {0} errors and {1} warnings",
+
+    "MESSAGE_DIAGNOSE_MATCH_UNKNOWN": "Unknown: {0}",
     "MESSAGE_DIAGNOSE_MATCH_MISSING_CONFIG": "The configuration file for SHVDN does not exists",
     "MESSAGE_DIAGNOSE_MATCH_LEGACY_ZERO": "Mod {0} does not references a version for SHVDN, will use outdated SHVDN2, ask the mod developer to update the mod",
     "MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO": "Mod {0} is using SHVDN2, which is outdated, ask the mod developer to update the mod",

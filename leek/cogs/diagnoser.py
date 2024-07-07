@@ -29,10 +29,6 @@ MATCHES = {
     RE_CRASHED: "MESSAGE_DIAGNOSE_MATCH_CRASHED",
 }
 VER_TWO_WARNING = "script(s) resolved to the deprecated API version 2.x (ScriptHookVDotNet2.dll)"
-LEVELS = {
-    "WARNING": "🟡",
-    "ERROR": "🔴"
-}
 FATAL_EXCEPTIONS = [
     "Caught fatal unhandled exception:",
     "Caught unhandled exception:"
@@ -40,11 +36,12 @@ FATAL_EXCEPTIONS = [
 ABORTED_SCRIPT = "Aborted script "
 
 
-def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901, PLR0912
+def get_problems(locale: str, lines: list[str]) -> tuple[list[str], list[str]]:  # noqa: C901, PLR0912
     """
     Gets the problems in the lines of a file.
     """
-    problems = []
+    warnings = []
+    errors = []
 
     is_processing_ver_two_warning = False
 
@@ -61,18 +58,17 @@ def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901, PLR
         level, details = match.groups()
 
         if is_processing_ver_two_warning:
-            message = LEVELS["WARNING"] + " " + l("MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO", locale, details)
-            problems.append(message)
+            message = l("MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO", locale, details)
+            warnings.append("🟡 " + message)
             continue
 
         if VER_TWO_WARNING in details:
             is_processing_ver_two_warning = True
             continue
 
-        if level not in LEVELS or details in FATAL_EXCEPTIONS or details.startswith(ABORTED_SCRIPT):
+        if level not in ["WARNING", "ERROR"] or details in FATAL_EXCEPTIONS or details.startswith(ABORTED_SCRIPT):
             continue
 
-        emoji = LEVELS[level]
         matched = False
 
         for match, label in MATCHES.items():
@@ -82,25 +78,30 @@ def get_problems(locale: str, lines: list[str]) -> list[str]:  # noqa: C901, PLR
                 if matches is None:
                     continue
 
-                message = f"{emoji} " + l(label, locale, *matches.groups())
+                message = l(label, locale, *matches.groups())
             elif isinstance(match, str):
                 if not details.startswith(match):
                     continue
 
-                message = f"{emoji} " + l(label, locale)
+                message = l(label, locale)
             else:
                 continue
 
-            if message not in problems:
-                problems.append(message)
+            if level == "WARNING" and message not in warnings:
+                warnings.append("🟡 " + message)
+            elif level == "ERROR" and message not in errors:
+                errors.append("🔴 " + message)
 
             matched = True
             break
 
         if not matched:
-            problems.append(f"{emoji} Unknown ({details})")
+            if level == "WARNING":
+                warnings.append("🟡 " + l("MESSAGE_DIAGNOSE_MATCH_UNKNOWN", locale, details))
+            elif level == "ERROR":
+                errors.append("🔴 " + l("MESSAGE_DIAGNOSE_MATCH_UNKNOWN", locale, details))
 
-    return problems
+    return warnings, errors
 
 
 class Diagnoser(Cog):
@@ -136,12 +137,12 @@ class Diagnoser(Cog):
             content = await response.text()
             lines = content.splitlines()
 
-        problems = get_problems(ctx.locale, lines)
+        warnings, errors = get_problems(ctx.locale, lines)
 
-        if not problems:
-            await ctx.respond(l("MESSAGE_DIAGNOSE_NOTHING", ctx.locale))
-        else:
+        if warnings or errors:
             embed = Embed()
-            embed.title = f"Found {len(problems)} problems"
-            embed.description = "\n".join(problems)
+            embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(warnings), len(errors))
+            embed.description = "\n\n".join(("\n".join(errors), "\n".join(warnings)))
             await ctx.respond(embed=embed)
+        else:
+            await ctx.respond(l("MESSAGE_DIAGNOSE_NOTHING", ctx.locale))

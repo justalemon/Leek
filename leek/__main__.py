@@ -102,13 +102,15 @@ def main() -> None:
             LOGGER.error("Class '%s' does not inherits from a Cog", name)
             continue
 
+        LOGGER.info("Adding cog %s", name)
+
         try:
             bot.add_cog(cog(bot))
         except Exception:
             # We catch everything because we don't know what exception might be triggered
             LOGGER.exception("Unable to start '%s'", name)
         finally:
-            LOGGER.info("Added cog %s", name)
+            LOGGER.info("Successfully added cog %s", name)
 
     warnings.filterwarnings(os.environ.get("SQL_WARNINGS", "ignore"), module="aiomysql")
 

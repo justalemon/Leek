@@ -15,7 +15,7 @@ COPY --from=build src/dist /dist
 RUN <<EOF
 python -m pip install -U pip
 python -m pip install --find-links /dist/ leekbot[extras]
-python -m playwright install
+python -m playwright install firefox
 python -m pip cache purge
 rm -fr /dist
 EOF

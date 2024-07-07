@@ -6,7 +6,16 @@ import os
 import re
 from typing import TYPE_CHECKING
 
-from discord import Cog, Embed, EmbedAuthor, TextChannel
+from discord import (
+    ApplicationContext,
+    Cog,
+    Embed,
+    EmbedAuthor,
+    SlashCommandOptionType,
+    TextChannel,
+    option,
+    slash_command,
+)
 from discord.ext import tasks
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -15,15 +24,14 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.remote.webelement import WebElement
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
-from leek import DatabaseRequiredError, LeekBot
+from leek import DatabaseRequiredError, LeekBot, d, la
 
 if TYPE_CHECKING:
     from aiomysql import Cursor
-    from discord import ApplicationContext
-    from selenium.webdriver.remote.webelement import WebElement
 
 RE_LINK = re.compile("https://www.gta5-mods.com/(tools|vehicles|paintjobs|weapons|scripts|player|maps|misc)"
                      "/([a-z0-9\\-]+)")
@@ -42,7 +50,9 @@ SQL_CREATE = """CREATE TABLE IF NOT EXISTS mods (
     last INT DEFAULT 0,
     PRIMARY KEY (id)
 )"""
-SQL_FETCH = "SELECT * FROM mods"
+SQL_FETCH_ALL = "SELECT * FROM mods"
+SQL_FETCH_ONE = "SELECT channel FROM mods WHERE type = %s AND slug = %s AND guild = %s"
+SQL_INSERT = "INSERT INTO mods (type, slug, guild, channel) VALUES (%s, %s, %s, %s)"
 
 
 async def _send_message_to(channel: TextChannel, element: WebElement, title: str, url: str) -> None:
@@ -61,7 +71,7 @@ async def _send_message_to(channel: TextChannel, element: WebElement, title: str
 
 class ModComments(Cog):
     """
-    Comment parser an redirector for 5mods.
+    Comment parser and redirector for 5mods.
     """
     def __init__(self, bot: LeekBot):
         """
@@ -107,7 +117,7 @@ class ModComments(Cog):
         """
         async with self.bot.connection as connection, await connection.cursor() as cursor:
             cursor: Cursor
-            await cursor.execute(SQL_FETCH)
+            await cursor.execute(SQL_FETCH_ALL)
             checks = await cursor.fetchall()
             await connection.commit()
 
@@ -168,3 +178,37 @@ class ModComments(Cog):
                 await connection.commit()
 
             self.check_for_comments.start()
+
+    @slash_command(name_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_NAME"),
+                   description=d("MODCOMMENTS_COMMAND_ADDMOD_DESC"),
+                   description_localizations=la("MODCOMMENTS_COMMAND_ADDMOD_DESC"))
+    @option("url", type=SlashCommandOptionType.string)
+    async def addmod(self, ctx: ApplicationContext, url: str) -> None:
+        """
+        Command used to add mod comments to the channel.
+        """
+        match = RE_LINK.fullmatch(url)
+
+        if match is None:
+            await ctx.respond("The URL does not appears to be valid, please check the link and try again.")
+            return
+
+        type, mod = match.groups()
+
+        async with self.bot.connection as connection, await connection.cursor() as cursor:
+            cursor: Cursor
+            await cursor.execute(SQL_FETCH_ONE, (type, mod, ctx.guild.id))
+            found = await cursor.fetchone()
+
+            if found:
+                channel = found[0]
+                await ctx.respond(f"This mod is already registered to <#{channel}> in the server.")
+                return
+
+        async with self.bot.connection as connection, await connection.cursor() as cursor:
+            cursor: Cursor
+            await cursor.execute(SQL_INSERT, (type, mod, ctx.guild.id, ctx.channel.id))
+            await connection.commit()
+            last = cursor.lastrowid
+
+        await ctx.respond(f"Added https://www.gta5-mods.com/{type}/{mod} with ID {last}")

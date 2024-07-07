@@ -1,0 +1,4 @@
+{
+    "MODCOMMENTS_COMMAND_ADDMOD_NAME": "addmod",
+    "MODCOMMENTS_COMMAND_ADDMOD_DESC": "Links a mod in 5mods to receive comments in this channel."
+}

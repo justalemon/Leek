@@ -1,7 +1,7 @@
 """
 Cog for parsing comments from 5mods mod pages and sending them to channels.
 """
-
+import logging
 import os
 import re
 from typing import TYPE_CHECKING, Optional
@@ -15,6 +15,8 @@ from leek import DatabaseRequiredError, LeekBot, d, l, la
 
 if TYPE_CHECKING:
     from aiomysql import Cursor
+
+LOGGER = logging.getLogger("leek_modcomments")
 
 PERMISSIONS = discord.Permissions(manage_messages=True)
 COLOR = 0x20ba4e
@@ -97,6 +99,8 @@ class ModComments(discord.Cog):
             checks = await cursor.fetchall()
             await connection.commit()
 
+        LOGGER.info("Started processing of %s entries", len(checks))
+
         for entry in checks:
             identifier, mod_type, mod_slug, guild_id, channel_id, last_comment = entry
 
@@ -104,13 +108,17 @@ class ModComments(discord.Cog):
             channel: discord.TextChannel = self.bot.get_channel(channel_id)
 
             if channel is None:
+                LOGGER.warning("Unable to find channel %s for %s/%s", channel_id, mod_type, mod_slug)
                 continue
 
+            LOGGER.info("Loading %s", url)
             await self.page.goto(url)
+            LOGGER.info("Loaded %s", url)
 
             try:
                 message = await self.page.locator(XPATH_ERROR).inner_text(timeout=1000)
                 if message == "The page you were looking for doesn't exist.":
+                    LOGGER.warning("Mod %s/%s no longer exists", mod_type, mod_slug)
                     continue
             except PlaywrightTimeoutError:
                 pass
@@ -126,6 +134,7 @@ class ModComments(discord.Cog):
                 comment_id = int(await element.get_attribute("data-comment-id"))
                 await _send_message_to(channel, element, mod_name, url)
                 await self._update(identifier, comment_id)
+                LOGGER.info("Sending first comment %s for %s/%s to %s", comment_id, mod_type, mod_slug, channel_id)
                 continue
 
             send = False
@@ -140,6 +149,9 @@ class ModComments(discord.Cog):
                 if send:
                     await _send_message_to(channel, element, mod_name, url)
                     await self._update(identifier, comment_id)
+                    LOGGER.info("Sending new comment %s for %s/%s to %s", comment_id, mod_type, mod_slug, channel_id)
+
+            LOGGER.info("Finished processing %s/%s at %s", mod_type, mod_slug, channel_id)
 
     @discord.Cog.listener()
     async def on_ready(self) -> None:
@@ -148,6 +160,8 @@ class ModComments(discord.Cog):
         """
         desired_driver = os.environ.get("MODCOMMENTS_DRIVER", "firefox").lower()
         headless = bool(int(os.environ.get("MODCOMMENTS_HEADLESS", 1)))
+
+        LOGGER.info("Initializing Playwright with %s (headless: %s)", desired_driver, headless)
 
         self.pw = await async_playwright().start()
 

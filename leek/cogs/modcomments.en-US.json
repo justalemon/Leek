@@ -1,18 +1,22 @@
 {
     "TASK_CHECK_NEW": "New comment in {0} by {1}",
-    
+
     "COMMAND_ADDMOD_NAME": "addmod",
     "COMMAND_ADDMOD_DESC": "Links a mod in 5mods to receive comments in this channel.",
+    "COMMAND_ADDMOD_URL_NAME": "url",
+    "COMMAND_ADDMOD_URL_DESC": "The mod URL to add",
     "COMMAND_ADDMOD_INVALID": "The URL does not appears to be valid, please check the link and try again.",
     "COMMAND_ADDMOD_EXISTS": "This mod is already registered to <#{0}> in the server.",
     "COMMAND_ADDMOD_DONE": "Added https://www.gta5-mods.com/{0}/{1} with ID {2}",
-    
+
     "COMMAND_LISTMODS_NAME": "listmods",
     "COMMAND_LISTMODS_DESC": "Lists all of the mods from 5mods registered in this server.",
     "COMMAND_LISTMODS_NONE": "There are no mods registered in this server.",
 
     "COMMAND_DELETEMOD_NAME": "deletemod",
     "COMMAND_DELETEMOD_DESC": "Deletes a specific mod-channel association.",
+    "COMMAND_DELETEMOD_MODID_NAME": "mod_id",
+    "COMMAND_DELETEMOD_MODID_DESC": "The ID of the mod",
     "COMMAND_DELETEMOD_DONE": "The mod has been successfully removed.",
     "COMMAND_DELETEMOD_INVALID": "ID could not be found."
 }

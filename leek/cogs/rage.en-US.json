@@ -1,3 +1,8 @@
 {
-    "COMMAND_NATIVE_DESC": "Shows the documentation of a specific Native."
+    "COMMAND_NATIVE_NAME": "native",
+    "COMMAND_NATIVE_DESC": "Shows the documentation of a specific Native.",
+    "COMMAND_NATIVE_NAME_NAME": "name",
+    "COMMAND_NATIVE_NAME_DESC": "The name of the native.",
+    "COMMAND_NATIVE_GAME_NAME": "game",
+    "COMMAND_NATIVE_GAME_DESC": "The game to search."
 }

@@ -6,8 +6,18 @@
 
     "COMMAND_TAG_NAME": "tag",
     "COMMAND_TAG_DESC": "Views a specific tag.",
+    "COMMAND_TAG_NAME_NAME": "name",
+    "COMMAND_TAG_NAME_DESC": "The name of the tag",
+
     "COMMAND_CREATETAG_NAME": "createtag",
     "COMMAND_CREATETAG_DESC": "Creates a new tag.",
+    "COMMAND_CREATETAG_NAME_NAME": "name",
+    "COMMAND_CREATETAG_NAME_DESC": "The name of the tag to create",
+    "COMMAND_CREATETAG_CONTENT_NAME": "content",
+    "COMMAND_CREATETAG_CONTENT_DESC": "The desired tag content",
+
     "COMMAND_DELETETAG_NAME": "deletetag",
-    "COMMAND_DELETETAG_DESC": "Deletes an existing tag."
+    "COMMAND_DELETETAG_DESC": "Deletes an existing tag.",
+    "COMMAND_DELETETAG_NAME_NAME": "name",
+    "COMMAND_DELETETAG_NAME_DESC": "The name of the tag"
 }

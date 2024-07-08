@@ -5,8 +5,8 @@ Tools for helping with the modding of RAGE Games.
 import logging
 import string
 
+import discord
 from aiohttp import ClientResponseError
-from discord import ApplicationContext, AutocompleteContext, Cog, Embed, Option, slash_command
 
 from leek import LeekBot, d, la
 
@@ -63,7 +63,7 @@ def find_native(name: str, game: str) -> dict | None:
     return next((x for x in natives if name in (x["hash"], x["name"])), None)
 
 
-async def get_natives(ctx: AutocompleteContext) -> list[str]:
+async def get_natives(ctx: discord.AutocompleteContext) -> list[str]:
     """
     Gets the native that match the partial lookup.
     """
@@ -71,14 +71,14 @@ async def get_natives(ctx: AutocompleteContext) -> list[str]:
     return [x for x in CACHE if query in x]
 
 
-async def get_games(ctx: AutocompleteContext) -> list[str]:  # noqa: ARG001
+async def get_games(ctx: discord.AutocompleteContext) -> list[str]:  # noqa: ARG001
     """
     Gets the list of available games.
     """
     return list(NATIVES.keys())
 
 
-class Rage(Cog):
+class Rage(discord.Cog):
     """
     Tools for Rockstar Advanced Game Engine modders.
     """
@@ -88,7 +88,7 @@ class Rage(Cog):
         """
         self.bot: LeekBot = bot
 
-    @Cog.listener()
+    @discord.Cog.listener()
     async def on_connect(self) -> None:
         """
         Downloads the list of natives when connecting to Discord.
@@ -132,12 +132,23 @@ class Rage(Cog):
 
         LOGGER.info("Finished fetching the natives")
 
-    @slash_command(name_localizations=la("COMMAND_NATIVE_NAME"),
-                   description=d("COMMAND_NATIVE_DESC"),
-                   description_localizations=la("COMMAND_NATIVE_DESC"))
-    async def native(self, ctx: ApplicationContext, name: Option(str, "The name to search", autocomplete=get_natives),
-                     game: Option(str, "The game for this native", default="gtav",
-                                  autocomplete=get_games)) -> None:
+    @discord.slash_command(name_localizations=la("COMMAND_NATIVE_NAME"),
+                           description=d("COMMAND_NATIVE_DESC"),
+                           description_localizations=la("COMMAND_NATIVE_DESC"))
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_NATIVE_NAME_NAME"),
+                    name_localizations=la("COMMAND_NATIVE_NAME_NAME"),
+                    description=d("COMMAND_NATIVE_NAME_DESC"),
+                    description_localizations=la("COMMAND_NATIVE_NAME_DESC"),
+                    autocomplete=get_natives)
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_NATIVE_GAME_NAME"),
+                    name_localizations=la("COMMAND_NATIVE_GAME_NAME"),
+                    description=d("COMMAND_NATIVE_GAME_DESC"),
+                    description_localizations=la("COMMAND_NATIVE_GAME_DESC"),
+                    autocomplete=get_games,
+                    default="gtav")
+    async def native(self, ctx: discord.ApplicationContext, name: str, game: str) -> None:
         """
         Searches for the documentation of a native.
         """
@@ -149,7 +160,7 @@ class Rage(Cog):
 
         params = format_params(found["params"])
 
-        embed = Embed()
+        embed = discord.Embed()
         embed.title = found["name"]
         embed.description = "**Hash**: {0}\n**Lua Name**: {1}\n**Parameters**: {2}".format(found["hash"],
                                                                                            found["lua"],

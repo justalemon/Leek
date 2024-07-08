@@ -173,7 +173,11 @@ class ModComments(discord.Cog):
                            description=d("COMMAND_ADDMOD_DESC"),
                            description_localizations=la("COMMAND_ADDMOD_DESC"),
                            default_member_permissions=PERMISSIONS)
-    @discord.option("url", type=discord.SlashCommandOptionType.string)
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_ADDMOD_URL_NAME"),
+                    name_localizations=la("COMMAND_ADDMOD_URL_NAME"),
+                    description=d("COMMAND_ADDMOD_URL_DESC"),
+                    description_localizations=la("COMMAND_ADDMOD_URL_DESC"))
     async def addmod(self, ctx: discord.ApplicationContext, url: str) -> None:
         """
         Command used to add mod comments to the channel.
@@ -229,6 +233,11 @@ class ModComments(discord.Cog):
                            description=d("COMMAND_DELETEMOD_DESC"),
                            description_localizations=la("COMMAND_DELETEMOD_DESC"),
                            default_member_permissions=PERMISSIONS)
+    @discord.option(type=discord.SlashCommandOptionType.integer,
+                    name=d("COMMAND_DELETEMOD_MODID_NAME"),
+                    name_localizations=la("COMMAND_DELETEMOD_MODID_NAME"),
+                    description=d("COMMAND_DELETEMOD_MODID_DESC"),
+                    description_localizations=la("COMMAND_DELETEMOD_MODID_DESC"))
     async def deletemod(self, ctx: discord.ApplicationContext, mod_id: int) -> None:
         """
         Deletes a registered mod.

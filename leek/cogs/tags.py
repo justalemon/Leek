@@ -4,7 +4,7 @@ Extension used to create and manage tags.
 
 from typing import TYPE_CHECKING
 
-from discord import ApplicationContext, AutocompleteContext, Cog, Option, Permissions, slash_command
+import discord
 from pymysql import IntegrityError
 
 from leek import DatabaseRequiredError, LeekBot, d, l, la
@@ -12,7 +12,7 @@ from leek import DatabaseRequiredError, LeekBot, d, l, la
 if TYPE_CHECKING:
     from aiomysql import Cursor
 
-PERMISSIONS = Permissions(manage_messages=True)
+PERMISSIONS = discord.Permissions(manage_messages=True)
 CREATE = "CREATE TABLE IF NOT EXISTS tags_%s (id INT NOT NULL auto_increment, name TEXT NOT NULL UNIQUE, " \
          "content TEXT NOT NULL, primary key (id))"
 FETCH_ALL = "SELECT (name) FROM tags_%s"
@@ -21,7 +21,7 @@ ADD = "INSERT INTO tags_%s (name, content) VALUES (%s, %s)"
 DELETE = "DELETE FROM tags_%s WHERE name=%s"
 
 
-async def get_tag_names(ctx: AutocompleteContext) -> list[str]:
+async def get_tag_names(ctx: discord.AutocompleteContext) -> list[str]:
     """
     Gets the tag names used for the autocomplete feature.
     """
@@ -43,7 +43,7 @@ async def get_tag_names(ctx: AutocompleteContext) -> list[str]:
         return [x[0] for x in tags]
 
 
-class Tags(Cog):
+class Tags(discord.Cog):
     """
     Cog used to create and manage Tags.
     """
@@ -53,17 +53,23 @@ class Tags(Cog):
         """
         self.bot: LeekBot = bot
 
-    async def cog_before_invoke(self, ctx: ApplicationContext) -> None:  # noqa: ARG002
+    async def cog_before_invoke(self, ctx: discord.ApplicationContext) -> None:  # noqa: ARG002
         """
         Checks whether the database is available before executing a command.
         """
         if not self.bot.is_pool_available:
             raise DatabaseRequiredError(self)
 
-    @slash_command(name_localizations=la("COMMAND_TAG_NAME"),
-                   description=d("COMMAND_TAG_DESC"),
-                   description_localization=la("COMMAND_TAG_DESC"))
-    async def tag(self, ctx: ApplicationContext, name: Option(str, "The tag name", autocomplete=get_tag_names)) -> None:
+    @discord.slash_command(name_localizations=la("COMMAND_TAG_NAME"),
+                           description=d("COMMAND_TAG_DESC"),
+                           description_localization=la("COMMAND_TAG_DESC"))
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_TAG_NAME_NAME"),
+                    name_localizations=la("COMMAND_TAG_NAME_NAME"),
+                    description=d("COMMAND_TAG_NAME_DESC"),
+                    description_localizations=la("COMMAND_TAG_NAME_DESC"),
+                    autocomplete=get_tag_names)
+    async def tag(self, ctx: discord.ApplicationContext, name: str) -> None:
         """
         Gets a specific tag.
         """
@@ -80,12 +86,21 @@ class Tags(Cog):
         else:
             await ctx.respond(tag[0])
 
-    @slash_command(name_localizations=la("COMMAND_CREATETAG_NAME"),
-                   description=d("COMMAND_CREATETAG_DESC"),
-                   description_localization=la("COMMAND_CREATETAG_DESC"),
-                   default_member_permissions=PERMISSIONS)
-    async def createtag(self, ctx: ApplicationContext, name: Option(str, "The tag name"),
-                        content: Option(str, "The text content of the tag")) -> None:
+    @discord.slash_command(name_localizations=la("COMMAND_CREATETAG_NAME"),
+                           description=d("COMMAND_CREATETAG_DESC"),
+                           description_localization=la("COMMAND_CREATETAG_DESC"),
+                           default_member_permissions=PERMISSIONS)
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_CREATETAG_NAME_NAME"),
+                    name_localizations=la("COMMAND_CREATETAG_NAME_NAME"),
+                    description=d("COMMAND_CREATETAG_NAME_DESC"),
+                    description_localizations=la("COMMAND_CREATETAG_NAME_DESC"))
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_CREATETAG_CONTENT_NAME"),
+                    name_localizations=la("COMMAND_CREATETAG_CONTENT_NAME"),
+                    description=d("COMMAND_CREATETAG_CONTENT_DESC"),
+                    description_localizations=la("COMMAND_CREATETAG_CONTENT_DESC"))
+    async def createtag(self, ctx: discord.ApplicationContext, name: str, content: str) -> None:
         """
         Creates a new tag.
         """
@@ -100,12 +115,16 @@ class Tags(Cog):
         except IntegrityError:
             await ctx.respond(l("ADD_DUPE", ctx.locale, name), ephemeral=True)
 
-    @slash_command(name_localizations=la("COMMAND_DELETETAG_NAME"),
-                   description=d("COMMAND_DELETETAG_DESC"),
-                   description_localization=la("COMMAND_DELETETAG_DESC"),
-                   default_member_permissions=PERMISSIONS)
-    async def deletetag(self, ctx: ApplicationContext, name: Option(str, "The tag name",
-                                                                    autocomplete=get_tag_names)) -> None:
+    @discord.slash_command(name_localizations=la("COMMAND_DELETETAG_NAME"),
+                           description=d("COMMAND_DELETETAG_DESC"),
+                           description_localization=la("COMMAND_DELETETAG_DESC"),
+                           default_member_permissions=PERMISSIONS)
+    @discord.option(type=discord.SlashCommandOptionType.string,
+                    name=d("COMMAND_DELETETAG_NAME_NAME"),
+                    name_localizations=la("COMMAND_DELETETAG_NAME_NAME"),
+                    description=d("COMMAND_DELETETAG_NAME_DESC"),
+                    description_localizations=la("COMMAND_DELETETAG_NAME_DESC"))
+    async def deletetag(self, ctx: discord.ApplicationContext, name: str) -> None:
         """
         Deletes a specific tag by it's name.
         """

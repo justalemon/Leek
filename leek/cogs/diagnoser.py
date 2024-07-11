@@ -142,7 +142,7 @@ class Diagnoser(Cog):
 
         if warnings or errors:
             embed.colour = 0xff1100 if errors else 0xffe100
-            embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(warnings), len(errors))
+            embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(errors), len(warnings))
             embed.description = "\n\n".join(("\n".join(errors), "\n".join(warnings)))
         else:
             embed.colour = 0x6fff00

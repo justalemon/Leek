@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import logging
 import traceback
-from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
@@ -14,6 +13,8 @@ import aiohttp
 import aiomysql
 from aiomysql import Connection, Pool
 from discord import ApplicationContext, AutoShardedBot, DiscordException, Embed, HTTPException, NotFound, SlashCommand
+
+import leek
 
 from .localization import d, l, la
 
@@ -26,13 +27,6 @@ LOGGER = logging.getLogger("leek")
 def _is_running_on_docker() -> bool:
     mountinfo = Path("/proc/1/mountinfo")
     return mountinfo.is_file() and mountinfo.read_text().find("/docker/containers/") > -1
-
-
-def _get_version() -> str:
-    try:
-        return version("leekbot")
-    except PackageNotFoundError:
-        return "Unknown"
 
 
 class LeekBot(AutoShardedBot):
@@ -207,7 +201,7 @@ class LeekBot(AutoShardedBot):
         embed.set_footer(text=l("BOT_COMMAND_ABOUT_FOOTER", ctx.locale))
 
         embed.add_field(name=l("BOT_COMMAND_ABOUT_VERSION", ctx.locale),
-                        value=_get_version(),
+                        value=leek.__version__,
                         inline=True)
         embed.add_field(name=l("BOT_COMMAND_ABOUT_DOCKER", ctx.locale),
                         value=yes if self.is_in_docker else no,

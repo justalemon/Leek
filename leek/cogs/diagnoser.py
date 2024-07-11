@@ -38,12 +38,18 @@ FATAL_EXCEPTIONS = [
 ABORTED_SCRIPT = "Aborted script "
 
 
-def get_problems(locale: str, lines: list[str]) -> tuple[list[str], list[str]]:  # noqa: C901, PLR0912
+def get_problems(locale: str, lines: list[str]) -> tuple[list[str], list[str]]:  # noqa: C901
     """
     Gets the problems in the lines of a file.
     """
     warnings = []
     errors = []
+
+    def add_message(level: str, message: str) -> None:
+        if level == "WARNING" and "🟡 " + message not in warnings:
+            warnings.append("🟡 " + message)
+        elif level == "ERROR" and "🔴 " + message not in errors:
+            errors.append("🔴 " + message)
 
     is_processing_ver_two_warning = False
 
@@ -89,19 +95,13 @@ def get_problems(locale: str, lines: list[str]) -> tuple[list[str], list[str]]: 
             else:
                 continue
 
-            if level == "WARNING" and message not in warnings:
-                warnings.append("🟡 " + message)
-            elif level == "ERROR" and message not in errors:
-                errors.append("🔴 " + message)
+            add_message(level, message)
 
             matched = True
             break
 
         if not matched:
-            if level == "WARNING":
-                warnings.append("🟡 " + l("MESSAGE_DIAGNOSE_MATCH_UNKNOWN", locale, details))
-            elif level == "ERROR":
-                errors.append("🔴 " + l("MESSAGE_DIAGNOSE_MATCH_UNKNOWN", locale, details))
+            add_message(level, l("MESSAGE_DIAGNOSE_MATCH_UNKNOWN", locale, details))
 
     return warnings, errors
 

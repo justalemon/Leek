@@ -12,6 +12,7 @@
     "MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO": "Mod {0} is using SHVDN2, which is outdated, ask the mod developer to update the mod",
     "MESSAGE_DIAGNOSE_MATCH_INSTANCE_INVALID": "Mod {0} was not instantiated by SHVDN",
     "MESSAGE_DIAGNOSE_MATCH_DEPENDENCY_MISSING": "{0} requires {1} version {2} or higher but is not installed",
+    "MESSAGE_DIAGNOSE_MATCH_CONSTRUCTOR_CRASH": "Mod {0} crashed during initialization, report it to the mod developer",
     "MESSAGE_DIAGNOSE_MATCH_ASSEMBLY_MISSING": "{0} requires {1} version {2} or higher but is not installed",
     "MESSAGE_DIAGNOSE_MATCH_CONSTRUCTOR_MISSING": "Mod {0} is missing a constructor or the Attribute NoDefaultInstance",
     "MESSAGE_DIAGNOSE_MATCH_CRASHED": "{0} crashed, contact the developer with this log file"

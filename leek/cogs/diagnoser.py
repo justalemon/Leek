@@ -14,6 +14,7 @@ RE_INSTANCE = re.compile("A script tried to use a custom script instance of type
                          "instantiated by ScriptHookVDotNet")
 RE_DEPENDENCY = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because constructor threw an exception: "
                            "System.IO.FileNotFoundException: .* '([A-Za-z0-9.]*), Version=([0-9.]*),")
+RE_INIT_CRASH = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because constructor threw an exception:")
 RE_ASSEMBLY = re.compile("Failed to load assembly ([A-Za-z0-9_.]*).dll: System.IO.FileNotFoundException: "
                          "Could not load file or assembly '([A-Za-z0-9.]*), Version=([0-9.]*),")
 RE_CONSTRUCTOR = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because no public default "
@@ -24,6 +25,7 @@ MATCHES = {
     RE_LEGACY_ZERO: "MESSAGE_DIAGNOSE_MATCH_LEGACY_ZERO",
     RE_INSTANCE: "MESSAGE_DIAGNOSE_MATCH_INSTANCE_INVALID",
     RE_DEPENDENCY: "MESSAGE_DIAGNOSE_MATCH_DEPENDENCY_MISSING",
+    RE_INIT_CRASH: "MESSAGE_DIAGNOSE_MATCH_CONSTRUCTOR_CRASH",
     RE_ASSEMBLY: "MESSAGE_DIAGNOSE_MATCH_ASSEMBLY_MISSING",
     RE_CONSTRUCTOR: "MESSAGE_DIAGNOSE_MATCH_CONSTRUCTOR_MISSING",
     RE_CRASHED: "MESSAGE_DIAGNOSE_MATCH_CRASHED",

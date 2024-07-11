@@ -62,7 +62,7 @@ def main() -> None:
         LOGGER.error("Discord Token is not set")
         sys.exit(2)
 
-    debug_guilds = [int(x) for x in os.environ.get("DISCORD_GUILDS", "").split(",")]
+    debug_guilds = [int(x) for x in os.environ.get("DISCORD_GUILDS", "").split(",") if x]
 
     if debug_guilds:
         LOGGER.info("Found Guilds in debug mode: %s", debug_guilds)

@@ -131,6 +131,8 @@ class Diagnoser(Cog):
             await ctx.respond(l("MESSAGE_DIAGNOSE_NOT_VALID", ctx.locale))
             return
 
+        await ctx.defer()
+
         async with await self.bot.get(attachment.url) as response:
             if not response.ok:
                 await ctx.respond(l("MESSAGE_DIAGNOSE_FAILED", ctx.locale, response.status))

@@ -10,14 +10,14 @@ from leek import LeekBot, d, l
 
 RE_SHVDN = re.compile("\\[[0-9]{2}:[0-9]{2}:[0-9]{2}] \\[(WARNING|ERROR)] (.*)")
 RE_LEGACY_ZERO = re.compile("Resolving API version 0.0.0 referenced in (.+\\.dll).")
-RE_INSTANCE = re.compile("A script tried to use a custom script instance of type ([A-Za-z0-9_.]*) that was not "
+RE_INSTANCE = re.compile("A script tried to use a custom script instance of type ([A-Za-z0-9_.+]*) that was not "
                          "instantiated by ScriptHookVDotNet")
-RE_DEPENDENCY = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because constructor threw an exception: "
+RE_DEPENDENCY = re.compile("Failed to instantiate script ([A-Za-z0-9_.+]*) because constructor threw an exception: "
                            "System.IO.FileNotFoundException: .* '([A-Za-z0-9.]*), Version=([0-9.]*),")
-RE_INIT_CRASH = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because constructor threw an exception:")
-RE_ASSEMBLY = re.compile("Failed to load assembly ([A-Za-z0-9_.]*).dll: System.IO.FileNotFoundException: "
-                         "Could not load file or assembly '([A-Za-z0-9.]*), Version=([0-9.]*),")
-RE_CONSTRUCTOR = re.compile("Failed to instantiate script ([A-Za-z0-9_.]*) because no public default "
+RE_INIT_CRASH = re.compile("Failed to instantiate script ([A-Za-z0-9_.+]*) because constructor threw an exception:")
+RE_ASSEMBLY = re.compile("Failed to load assembly ([A-Za-z0-9_.+]*).dll: System.IO.FileNotFoundException: "
+                         "Could not load file or assembly '([A-Za-z0-9_.+]*), Version=([0-9.]*),")
+RE_CONSTRUCTOR = re.compile("Failed to instantiate script ([A-Za-z0-9_.+]*) because no public default "
                             "constructor was found")
 RE_CRASHED = re.compile("The exception was thrown while executing the script ([A-Za-z0-9_.]*)")
 MATCHES = {

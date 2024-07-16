@@ -15,9 +15,15 @@ COPY --from=build src/dist /dist
 RUN <<EOF
 python -m pip install -U pip
 python -m pip install --find-links /dist/ leekbot[extras]
+apt-get update
+apt-get upgrade
+python -m playwright install-deps
 python -m playwright install firefox
 python -m pip cache purge
-rm -fr /dist
+apt-get clean
+rm -rf /var/cache/apt/archives 
+rm -rf /var/lib/apt/lists/*
+rm -rf /dist
 EOF
 
 CMD ["python", "-m", "leek"]

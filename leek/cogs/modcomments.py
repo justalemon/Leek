@@ -112,7 +112,13 @@ class ModComments(discord.Cog):
                 continue
 
             LOGGER.info("Loading %s", url)
-            await self.page.goto(url)
+
+            try:
+                await self.page.goto(url)
+            except PlaywrightTimeoutError:
+                LOGGER.warning("Unable to load %s: Timed Out", url)
+                continue
+
             LOGGER.info("Loaded %s", url)
 
             try:

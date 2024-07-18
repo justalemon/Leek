@@ -89,7 +89,7 @@ class ModComments(discord.Cog):
             raise DatabaseRequiredError(self)
 
     @tasks.loop(minutes=int(os.environ.get("MODCOMMENTS_DELAY", 1)))
-    async def check_for_comments(self) -> None:
+    async def check_for_comments(self) -> None:  # noqa: C901
         """
         Task that checks for new comments in a specific schedule.
         """

@@ -6,12 +6,24 @@ import asyncio
 import logging
 from typing import Optional
 
-from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, Permissions, slash_command
+from discord import (
+    ApplicationContext,
+    Cog,
+    Forbidden,
+    HTTPException,
+    Message,
+    NotFound,
+    Permissions,
+    Role,
+    option,
+    slash_command,
+)
 
 from leek import LeekBot, d, l, la
 
 LOGGER = logging.getLogger("leek_moderation")
-PERMISSIONS = Permissions(manage_messages=True)
+PERMISSIONS_MESSAGES = Permissions(manage_messages=True)
+PERMISSIONS_ADMIN = Permissions(administrator=True)
 
 
 class Moderation(Cog):
@@ -56,7 +68,7 @@ class Moderation(Cog):
                    name_localizations=la("COMMAND_CLEAR_NAME"),
                    description=d("COMMAND_CLEAR_HELP"),
                    description_localizations=la("COMMAND_CLEAR_HELP"),
-                   default_member_permissions=PERMISSIONS)
+                   default_member_permissions=PERMISSIONS_MESSAGES)
     async def clear(self, ctx: ApplicationContext, keep: Optional[str]) -> None:
         """
         Clears the messages of a channel.
@@ -83,3 +95,30 @@ class Moderation(Cog):
             await self._safely_delete(ctx, message)
 
         await ctx.followup.send(l("COMMAND_CLEAR_DONE", ctx.locale), ephemeral=True)
+
+    @slash_command(name_localizations=la("COMMAND_APPLYROLE_NAME"),
+                   description=d("COMMAND_APPLYROLE_DESC"),
+                   description_localizations=la("COMMAND_APPLYROLE_DESC"),
+                   default_member_permissions=PERMISSIONS_ADMIN)
+    @option(name=d("COMMAND_APPLYROLE_ROLE_NAME"),
+            name_localizations=la("COMMAND_APPLYROLE_ROLE_NAME"),
+            description=d("COMMAND_APPLYROLE_ROLE_DESC"),
+            description_localizations=la("COMMAND_APPLYROLE_ROLE_DESC"))
+    async def applyrole(self, ctx: ApplicationContext, role: Role) -> None:
+        """
+        Applies a specific role to users that don't have any roles.
+        """
+        await ctx.defer(ephemeral=True)
+
+        count = 0
+        errors = 0
+
+        for member in ctx.guild.members:
+            try:
+                if member.top_role.name == "@everyone":
+                    await member.add_roles(role)
+                    count += 1
+            except:  # noqa: E722
+                errors += 1
+
+        await ctx.respond(l("COMMAND_APPLYROLE_ROLE_COMPLETED", ctx.locale, count, errors))

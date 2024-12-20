@@ -6,5 +6,11 @@
     "COMMAND_CLEAR_HTTP_ERROR": "Unable to delete messages: Code {0}",
     "COMMAND_CLEAR_LIMIT_LOCAL": "Rate limited for {0} seconds, please wait...",
     "COMMAND_CLEAR_LIMIT_GLOBAL": "Rate limited **globally** for {0} seconds.\nStopping.",
-    "COMMAND_CLEAR_DONE": "Done!"
+    "COMMAND_CLEAR_DONE": "Done!",
+
+    "COMMAND_APPLYROLE_NAME": "applyrole",
+    "COMMAND_APPLYROLE_DESC": "Applies a specific role to users that don't have any roles.",
+    "COMMAND_APPLYROLE_ROLE_NAME": "role",
+    "COMMAND_APPLYROLE_ROLE_DESC": "The name of the role",
+    "COMMAND_APPLYROLE_ROLE_COMPLETED": "Added the role to {0} members with {1} errors"
 }

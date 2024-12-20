@@ -8,7 +8,7 @@ python -m pip install -U pip build
 python -m build
 EOF
 
-FROM python:3.13.0rc3-slim-bookworm
+FROM python:3.12.8-slim-bookworm
 LABEL "org.opencontainers.image.source"="https://github.com/justalemon/Leek"
 WORKDIR /dist
 COPY --from=build src/dist /dist

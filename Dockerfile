@@ -1,4 +1,4 @@
-FROM python:3.13.0rc3-slim-bookworm AS build
+FROM python:3.12.8-slim-bookworm AS build
 WORKDIR /src
 COPY leek/ ./leek
 COPY pyproject.toml .

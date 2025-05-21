@@ -157,16 +157,16 @@ class Diagnoser(Cog):
 
         responded = False
 
-        for message in messages:
+        for msg in messages:
             d = f"{embed.description}\n" if embed.description else ""
-            new = f"{d}{message}"
+            new = f"{d}{msg}"
             if len(new) > 4096:
                 if responded:
                     await ctx.send(embed=embed)
                 else:
                     await ctx.respond(embed=embed)
                     responded = True
-                embed.description = message
+                embed.description = msg
                 embed.title = None
             else:
                 embed.description = new

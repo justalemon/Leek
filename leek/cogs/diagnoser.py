@@ -38,18 +38,20 @@ FATAL_EXCEPTIONS = [
 ABORTED_SCRIPT = "Aborted script "
 
 
-def get_problems(locale: str, lines: list[str]) -> tuple[list[str], list[str]]:  # noqa: C901
+def get_problems(locale: str, lines: list[str]) -> tuple[dict[str, int], dict[str, int]]:  # noqa: C901
     """
     Gets the problems in the lines of a file.
     """
-    warnings = []
-    errors = []
+    warnings: dict[str, int] = {}
+    errors: dict[str, int] = {}
 
     def add_message(level: str, message: str) -> None:
-        if level == "WARNING" and "🟡 " + message not in warnings:
-            warnings.append("🟡 " + message)
-        elif level == "ERROR" and "🔴 " + message not in errors:
-            errors.append("🔴 " + message)
+        if level == "WARNING":
+            msg = "🟡 " + message
+            warnings[msg] = warnings.get(msg, 0) + 1
+        elif level == "ERROR":
+            msg = "🔴 " + message
+            errors[msg] = errors.get(msg, 0) + 1
 
     is_processing_ver_two_warning = False
 
@@ -66,8 +68,7 @@ def get_problems(locale: str, lines: list[str]) -> tuple[list[str], list[str]]: 
         level, details = match.groups()
 
         if is_processing_ver_two_warning:
-            message = l("MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO", locale, details)
-            warnings.append("🟡 " + message)
+            add_message("WARNING", l("MESSAGE_DIAGNOSE_MATCH_LEGACY_TWO", locale, details))
             continue
 
         if VER_TWO_WARNING in details:
@@ -147,7 +148,9 @@ class Diagnoser(Cog):
         if warnings or errors:
             embed.colour = 0xff1100 if errors else 0xffe100
             embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(errors), len(warnings))
-            embed.description = "\n\n".join(("\n".join(errors), "\n".join(warnings)))
+            e = "\n".join(f"{m} ({c})" for m, c in errors.items())
+            w = "\n".join(f"{m} ({c})" for m, c in warnings.items())
+            embed.description = "\n\n".join((e, w))
         else:
             embed.colour = 0x6fff00
             embed.title = l("MESSAGE_DIAGNOSE_NOTHING", ctx.locale)

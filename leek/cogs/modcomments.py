@@ -88,7 +88,7 @@ class ModComments(discord.Cog):
         if not self.bot.is_pool_available:
             raise DatabaseRequiredError(self)
 
-    @tasks.loop(minutes=int(os.environ.get("MODCOMMENTS_DELAY", 1)))
+    @tasks.loop(minutes=int(os.environ.get("MODCOMMENTS_DELAY", "1")))
     async def check_for_comments(self) -> None:  # noqa: C901
         """
         Task that checks for new comments in a specific schedule.
@@ -165,7 +165,7 @@ class ModComments(discord.Cog):
         Function triggered when the bot is ready.
         """
         desired_driver = os.environ.get("MODCOMMENTS_DRIVER", "firefox").lower()
-        headless = bool(int(os.environ.get("MODCOMMENTS_HEADLESS", 1)))
+        headless = bool(int(os.environ.get("MODCOMMENTS_HEADLESS", "1")))
 
         LOGGER.info("Initializing Playwright with %s (headless: %s)", desired_driver, headless)
 

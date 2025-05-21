@@ -39,7 +39,7 @@ class Hyperping(Cog):
         async with await self.bot.head(self.url) as resp:
             return resp.ok
 
-    @tasks.loop(seconds=float(os.environ.get("HYPERPING_DELAY", 60.0)))
+    @tasks.loop(seconds=float(os.environ.get("HYPERPING_DELAY", "60.0")))
     async def ping(self) -> None:
         """
         Sends the ping every couple of seconds.

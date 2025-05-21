@@ -15,12 +15,12 @@ description = "Lemon's Discord Bot Framework"
 authors = [
     { name = "Lemon", email = "justlemoncl@gmail.com" }
 ]
+license="MIT"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.12",

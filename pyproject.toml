@@ -3,7 +3,7 @@
 
 [build-system]
 requires = [
-    "setuptools>=75.6.0",
+    "setuptools>=80.8.0",
     "wheel>=0.45.1"
 ]
 build-backend = "setuptools.build_meta"
@@ -33,8 +33,8 @@ classifiers = [
 dependencies = [
     "py-cord[speed]>=2.6.1,<3.0.0",
     "aiomysql>=0.2.0,<1.0.0",
-    "python-dotenv>=1.0.1,<2.0.0",
-    "aiohttp>=3.11.11,<4.0.0"
+    "python-dotenv>=1.1.0,<2.0.0",
+    "aiohttp>=3.11.18,<4.0.0"
 ]
 requires-python = ">=3.12"
 dynamic = [
@@ -46,8 +46,8 @@ Homepage = "https://github.com/justalemon/Leek"
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.5.0,<1.0.0",
-    "build>=1.2.1,<2.0.0",
+    "ruff>=0.11.10,<1.0.0",
+    "build>=1.2.2,<2.0.0",
 ]
 extras = [
     "playwright>=1.45.0,<2.0.0"

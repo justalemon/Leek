@@ -145,14 +145,34 @@ class Diagnoser(Cog):
         warnings, errors = get_problems(ctx.locale, lines)
         embed = Embed()
 
-        if warnings or errors:
-            embed.colour = 0xff1100 if errors else 0xffe100
-            embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(errors), len(warnings))
-            e = "\n".join(f"{m} ({c})" for m, c in errors.items())
-            w = "\n".join(f"{m} ({c})" for m, c in warnings.items())
-            embed.description = "\n\n".join((e, w))
-        else:
+        if len(warnings) == 0 and len(errors) == 0:
             embed.colour = 0x6fff00
             embed.title = l("MESSAGE_DIAGNOSE_NOTHING", ctx.locale)
+            await ctx.respond(embed=embed)
 
-        await ctx.respond(embed=embed)
+        embed.colour = 0xff1100 if errors else 0xffe100
+        embed.title = l("MESSAGE_DIAGNOSE_FOUND", ctx.locale, len(errors), len(warnings))
+
+        messages = [f"{m} ({c})" for m, c in errors.items()] + [f"{m} ({c})" for m, c in warnings.items()]
+
+        responded = False
+
+        for message in messages:
+            d = f"{embed.description}\n" if embed.description else ""
+            new = f"{d}{message}"
+            if len(new) > 4096:
+                if responded:
+                    await ctx.send(embed=embed)
+                else:
+                    await ctx.respond(embed=embed)
+                    responded = True
+                embed.description = message
+                embed.title = None
+            else:
+                embed.description = new
+
+        if len(embed.description) > 0:
+            if responded:
+                await ctx.send(embed=embed)
+            else:
+                await ctx.respond(embed=embed)

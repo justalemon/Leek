@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: actions/setup-python@v5.3.0
+      - uses: actions/setup-python@v5.6.0
         with:
           python-version: 3.12
       - run: pip install .[dev]
@@ -27,7 +27,7 @@ jobs:
       - lint
     steps:
       - uses: actions/checkout@v4.2.2
-      - uses: actions/setup-python@v5.3.0
+      - uses: actions/setup-python@v5.6.0
         with:
           python-version: 3.12
       - uses: justalemon/VersionPatcher@v0.8
@@ -37,7 +37,7 @@ jobs:
           initpy-files: "leek/__init__.py"
       - run: pip install .[dev]
       - run: python -m build
-      - uses: actions/upload-artifact@v4.5.0
+      - uses: actions/upload-artifact@v4.6.2
         with:
           name: ${{ github.event.repository.name }}
           path: dist/*
@@ -52,8 +52,8 @@ jobs:
           version: 0.0.1-alpha.${{ github.run_number }}
           pyproject-files: "pyproject.toml"
           initpy-files: "leek/__init__.py"
-      - uses: docker/setup-buildx-action@v3.8.0
-      - uses: docker/login-action@v3.3.0
+      - uses: docker/setup-buildx-action@v3.10.0
+      - uses: docker/login-action@v3.4.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -67,7 +67,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha,format=short,prefix=
             type=raw,value=latest,enable={{ is_default_branch }}
-      - uses: docker/build-push-action@v6.10.0
+      - uses: docker/build-push-action@v6.17.0
         if: ${{ format('refs/heads/{0}', github.event.repository.default_branch) == github.ref || startsWith(github.ref, 'refs/tags/') }}
         with:
           push: true
